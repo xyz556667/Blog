@@ -6,17 +6,17 @@
     <description>Recent content in R on chuanMing</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 23 Apr 2019 23:53:48 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 24 Apr 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/tags/r/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>財金文字探勘專題-- R Tfidf 實作</title>
-      <link>/2019/04/23/%E8%B2%A1%E9%87%91%E6%96%87%E5%AD%97%E6%8E%A2%E5%8B%98%E5%B0%88%E9%A1%8C-r-tfidf-%E5%AF%A6%E4%BD%9C/</link>
-      <pubDate>Tue, 23 Apr 2019 23:53:48 +0000</pubDate>
+      <link>/2019/04/24/%E8%B2%A1%E9%87%91%E6%96%87%E5%AD%97%E6%8E%A2%E5%8B%98%E5%B0%88%E9%A1%8C-r-tfidf-%E5%AF%A6%E4%BD%9C/</link>
+      <pubDate>Wed, 24 Apr 2019 00:00:00 +0000</pubDate>
       
-      <guid>/2019/04/23/%E8%B2%A1%E9%87%91%E6%96%87%E5%AD%97%E6%8E%A2%E5%8B%98%E5%B0%88%E9%A1%8C-r-tfidf-%E5%AF%A6%E4%BD%9C/</guid>
+      <guid>/2019/04/24/%E8%B2%A1%E9%87%91%E6%96%87%E5%AD%97%E6%8E%A2%E5%8B%98%E5%B0%88%E9%A1%8C-r-tfidf-%E5%AF%A6%E4%BD%9C/</guid>
       <description>🎓前言
 tfidf 是一種在文字探勘中技巧，使用tf詞頻以及 idf 逆詞頻的相乘，去計算每個字詞在整體文本的重要性，本篇是要以R實作有關中文財經新聞的tfidf，去尋找每一篇的關鍵字，以及使用餘弦相似性，快速尋找相似的新聞文本 
 讀取必要套件包library(pacman)p_load(jiebaR,jiebaRD,data.table,readr,stringr,tidytext,rio,tidyverse,tm,tmcn,kableExtra)
