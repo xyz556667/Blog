@@ -1,0 +1,1286 @@
+<!DOCTYPE html>
+<html lang="en-us">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>R Tfidf 實作</title>
+        <style>
+
+    html body {
+        font-family: 'Mina', sans-serif;
+        background-color: #ededed;
+    }
+
+    :root {
+        --accent: #295477;
+        --border-width:  0 ;
+    }
+
+</style>
+
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Mina">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=VT323">
+
+
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/lakeside-light.min.css"> 
+
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.0/css/all.css" integrity="sha384-Mmxa0mLqhmOeaE8vgOSbKacftZcsNYDjQzuCOm6D02luYSzBG8vpaOykv9lFQ51Y" crossorigin="anonymous">
+
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+
+ 
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/r.min.js"></script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/bash.min.js"></script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/go.min.js"></script>
+    
+
+    <script>hljs.initHighlightingOnLoad();</script>
+
+
+
+
+
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+
+<link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+
+
+<script>$(document).on('click', function() { $('.collapse').collapse('hide'); })</script>
+
+
+<script>
+$(document).ready(function(){
+    
+  var input = $('#night-mode-toggle');
+  var container = $('#bigbody');
+  var stat = $('#button-status');
+  
+  container.toggleClass(localStorage.toggled);
+  stat.bootstrapToggle(localStorage.button).change();
+  
+  input.on('click', function() {
+      if (localStorage.toggled != "-nightmode" ) {
+          container.toggleClass("-nightmode", true );
+          localStorage.toggled = "-nightmode";
+          localStorage.button = "on";
+       } else {
+          container.toggleClass("-nightmode", false );
+          localStorage.toggled = "";
+          localStorage.button = "off"
+       }
+  })
+});
+</script>
+ <meta name="generator" content="Hugo 0.55.2" />
+        
+        
+
+    
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/img/favicon/site.webmanifest">
+    <link rel="mask-icon" href="/img/favicon/safari-pinned-tab.svg" color="#000000">
+    <link rel="shortcut icon" href="/img/favicon/favicon.ico">
+    <meta name="msapplication-TileColor" content="#2b5797">
+    <meta name="msapplication-config" content="/img/favicon/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
+    
+    
+    
+    <meta property="og:title" content="R Tfidf 實作">
+    <meta property="og:type" content="article">
+      
+      <meta name="twitter:card" content="summary">
+      <meta name="twitter:image" content="/favicon/android-chrome-192x192.png" >
+      
+    <meta property="description" content="">
+    <meta property="og:description" content="">
+    
+    <meta name="twitter:creator" content="">
+    <meta name="twitter:site" content="">
+    
+    </head>
+
+    
+    
+    <script type="text/javascript" async
+      src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    </script>
+    
+
+    <body id = "bigbody">
+        <nav class="navbar navbar-default navbar-fixed-top">
+            <div class="container">
+                <div class="navbar-header">
+                    <a class="navbar-brand visible-xs" href="#">R Tfidf 實作</a>
+                    <button class="navbar-toggle" data-target=".navbar-collapse" data-toggle="collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                </div>
+                <div class="collapse navbar-collapse">
+                    
+                        <ul class="nav navbar-nav">
+                            
+                                <li><a href="/">Home</a></li>
+                            
+                                <li><a href="/post/">Posts</a></li>
+                            
+                                <li><a href="/tags/">Tags</a></li>
+                            
+                        </ul>
+                    
+                    
+                        <ul class="nav navbar-nav navbar-right">
+                            
+                                <li class="navbar-icon"><a href="mailto:xyz556667@gmail.com"><i class="far fa-envelope"></i></a></li>
+                            
+                                <li class="navbar-icon"><a href="https://github.com/xyz556667"><i class="fab fa-github"></i></a></li>
+                            
+                                <li class="navbar-icon"><a href="https://www.linkedin.com/in/jimmy-chang-890943141/"><i class="fab fa-linkedin"></i></a></li>
+                            
+                            <li id="night-mode-toggle">
+    <input type="checkbox" id = "button-status"
+        data-toggle="toggle"
+        data-width = "10"
+        data-height = "1"
+        data-on="<i class='far fa-moon fa-lg'></i>"
+        data-off= "<i class='far fa-sun fa-lg'></i>"
+        data-style="ios"
+        data-onstyle = "default">
+</li>
+                        </ul>
+                    
+                </div>
+            </div>
+        </nav>
+
+
+<main>
+
+    <div class="item">
+
+    
+    
+    
+
+    
+    
+      
+    
+
+    <h4><a href="/2019/04/21/r-tfidf-%E5%AF%A6%E4%BD%9C/">R Tfidf 實作</a></h4>
+    <h5>April 21, 2019 - 4 minutes</h5>
+    <h5></h5>
+
+    
+
+        <a href="/categories/r">
+        <kbd class="item-cat"> R </kbd>
+    </a>
+    
+    
+
+</div>
+
+
+    <br> <div class="text-justify">
+<script src="/rmarkdown-libs/kePrint/kePrint.js"></script>
+
+
+<hr>
+<p class="qiz">
+<span style="font-size:24px">🎓 前言</span><br>
+</p class="qiz">
+<p><em>tfidf 是一種在文字探勘中技巧，使用tf詞頻以及 idf 逆詞頻的相乘，去計算每個字詞在整體文本的重要性，本篇是要以R實作有關中文財經新聞的tfidf，去尋找每一篇的關鍵字，以及使用餘弦相似性，快速尋找相似的新聞文本 </em></p>
+<div id="section" class="section level5">
+<h5>讀取必要套件包</h5>
+<pre class="r"><code>library(pacman)
+p_load(jiebaR,jiebaRD,data.table,readr,stringr,tidytext,rio,tidyverse,tm,tmcn,kableExtra)</code></pre>
+<p><br></p>
+</div>
+<div id="section-1" class="section level5">
+<h5>讀取文本檔案</h5>
+<pre class="r"><code>word &lt;- read_csv(&quot;文本.csv&quot;)
+words &lt;- word %&gt;% na.omit() %&gt;% select(text)</code></pre>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+text
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+PC品牌大廠宏碁(2353)轉型有成，利多頻傳，其伺服器Altos再傳捷報！根據IDC資料指出，宏碁Altos去年出貨躍升為全台第三大、市占率為16%，在台灣整體伺服器市場下滑近12%的狀況下，銷售不降反升，表現優於業界平均水平。宏碁表示，從IDC2016及2017公布資料顯示，2016年AcerTaiwan伺服器市占率為13%，排名第四，2017年在市場量銳減之際，逆勢躍升至第三名，主因乃因宏碁積極轉型投入AI人工智慧領域，BigData、Cloud雲端物聯網發展、結合Acer軟、硬體、服務專業整合能力，並經過嚴格測試後，得到政府、大型企業認可，奪下許多大型專案之故。宏碁指出，該公司以豐富的成功案例證明實力，因應未來智慧城市、智慧醫療，乃至於工業4.0各領域龐大市場需求，更積極投入資源，2018成長可期。週三(14日)舉行供應商大會，董事長陳俊聖發下豪語，今年電競PC以美國市佔冠軍為目標，商用產線也成長。
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+緯創(3231)遭外界指控因生產iPhone的管理誠信問題，遭蘋果要求停工兩週，導致週四(15日)股價跳空重挫。據悉，緯創在上午內部緊急會議、並取得客戶的認同之後，僅以上傳重訊的方式低調否認停工兩周傳言，稱目前營運一切正常。此項傳言在本週緯創一連串利多，包括外資調升評等以及法說會釋出樂觀展望，被媒體以「緯創轉骨」為標題大肆報導，令股價連日大漲、短線漲幅近15%之後傳出，格外敏感，也重創緯創聲譽。不過，緯創對此並未打算太過追究，也不打算訴諸法律以維護其股東權益，僅以重訊的方式澄清，據緯創指出是考慮牽涉到客戶機密的複雜性才低調處理。緯創表示，在上午的緊急會議中，一方面是在內部確認媒體所報導的情況是否屬實，另一方面則是要定調處理的方式。由於事涉客戶機密，敏感度高，因此最後決定採取外界最關切的「停工」與否的問題作為基礎來澄清。該公司重訊強調，並無外傳停工兩周的狀況，目前營運一切正常。而這樣的處理方式，則是取得「客戶」的認同，嚴控損害範圍。事實上，緯創透露，在週四特定媒體披露此事之前，市場上已有耳語傳出，也有其他媒體接獲此一傳言，不過只有一家媒體做出處理，該公司在週三(14日)與週四均對此做出回應。緯創股價週四以25.4元、跳空5.7%開出低盤，隨著緯創近10點發出重訊澄清之後，買盤湧入，股價一路震盪走高，最高來到26.7元，跌幅縮減到0.9%或0.25元，終場則收在26.5元，下跌0.45元或1.67%，線型上拉出一根紅K棒，外資力挺，持續大買5,477張。
+</td>
+</tr>
+</tbody>
+</table>
+<p><br></p>
+</div>
+<div id="id" class="section level5">
+<h5>對每篇標ID</h5>
+<pre class="r"><code>words %&gt;% mutate(id = 1:n()) -&gt; doc</code></pre>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+text
+</th>
+<th style="text-align:right;">
+id
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+PC品牌大廠宏碁(2353)轉型有成，利多頻傳，其伺服器Altos再傳捷報！根據IDC資料指出，宏碁Altos去年出貨躍升為全台第三大、市占率為16%，在台灣整體伺服器市場下滑近12%的狀況下，銷售不降反升，表現優於業界平均水平。宏碁表示，從IDC2016及2017公布資料顯示，2016年AcerTaiwan伺服器市占率為13%，排名第四，2017年在市場量銳減之際，逆勢躍升至第三名，主因乃因宏碁積極轉型投入AI人工智慧領域，BigData、Cloud雲端物聯網發展、結合Acer軟、硬體、服務專業整合能力，並經過嚴格測試後，得到政府、大型企業認可，奪下許多大型專案之故。宏碁指出，該公司以豐富的成功案例證明實力，因應未來智慧城市、智慧醫療，乃至於工業4.0各領域龐大市場需求，更積極投入資源，2018成長可期。週三(14日)舉行供應商大會，董事長陳俊聖發下豪語，今年電競PC以美國市佔冠軍為目標，商用產線也成長。
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+緯創(3231)遭外界指控因生產iPhone的管理誠信問題，遭蘋果要求停工兩週，導致週四(15日)股價跳空重挫。據悉，緯創在上午內部緊急會議、並取得客戶的認同之後，僅以上傳重訊的方式低調否認停工兩周傳言，稱目前營運一切正常。此項傳言在本週緯創一連串利多，包括外資調升評等以及法說會釋出樂觀展望，被媒體以「緯創轉骨」為標題大肆報導，令股價連日大漲、短線漲幅近15%之後傳出，格外敏感，也重創緯創聲譽。不過，緯創對此並未打算太過追究，也不打算訴諸法律以維護其股東權益，僅以重訊的方式澄清，據緯創指出是考慮牽涉到客戶機密的複雜性才低調處理。緯創表示，在上午的緊急會議中，一方面是在內部確認媒體所報導的情況是否屬實，另一方面則是要定調處理的方式。由於事涉客戶機密，敏感度高，因此最後決定採取外界最關切的「停工」與否的問題作為基礎來澄清。該公司重訊強調，並無外傳停工兩周的狀況，目前營運一切正常。而這樣的處理方式，則是取得「客戶」的認同，嚴控損害範圍。事實上，緯創透露，在週四特定媒體披露此事之前，市場上已有耳語傳出，也有其他媒體接獲此一傳言，不過只有一家媒體做出處理，該公司在週三(14日)與週四均對此做出回應。緯創股價週四以25.4元、跳空5.7%開出低盤，隨著緯創近10點發出重訊澄清之後，買盤湧入，股價一路震盪走高，最高來到26.7元，跌幅縮減到0.9%或0.25元，終場則收在26.5元，下跌0.45元或1.67%，線型上拉出一根紅K棒，外資力挺，持續大買5,477張。
+</td>
+<td style="text-align:right;">
+2
+</td>
+</tr>
+</tbody>
+</table>
+<p><br></p>
+</div>
+<div id="section-2" class="section level5">
+<h5>讀取財經詞庫與理財用詞詞庫，來源自搜狗詞庫</h5>
+<pre class="r"><code>f&lt;-readLines(&#39;financial word.txt&#39;,encoding = &quot;UTF-8&quot;)
+q&lt;-readLines(&#39;理財_0402.txt&#39;,encoding = &quot;UTF-8&quot;)
+load(&quot;股票公司名稱.RData&quot;)</code></pre>
+<p><br></p>
+</div>
+<div id="section-3" class="section level5">
+<h5>詞庫原本為簡體字，所以需要轉成繁體</h5>
+<pre class="r"><code>f1 &lt;- toTrad(f)
+q1 &lt;- toTrad(q)
+head(q1)</code></pre>
+<pre><code>[1] &quot;&lt;U+FEFF&gt;超買&quot; &quot;超賣&quot;   &quot;底部&quot;   &quot;低價區&quot; &quot;跌破&quot;   &quot;跌勢&quot;  </code></pre>
+<p><br></p>
+</div>
+<div id="section-4" class="section level5">
+<h5>初始化斷詞引擎</h5>
+<pre class="r"><code>jieba_tokenizer &lt;- worker(stop_word = &quot;stop2.txt&quot;)</code></pre>
+<p><br></p>
+</div>
+<div id="jieba" class="section level5">
+<h5>jieba詞庫新增</h5>
+<pre class="r"><code>new_user_word(jieba_tokenizer, f1) #財經用詞詞庫</code></pre>
+<pre><code>[1] TRUE</code></pre>
+<pre class="r"><code>new_user_word(jieba_tokenizer, q1) #理財用詞詞庫</code></pre>
+<pre><code>[1] TRUE</code></pre>
+<pre class="r"><code>new_user_word(jieba_tokenizer, symbolsALL2) #股票公司名稱</code></pre>
+<pre><code>[1] TRUE</code></pre>
+<p><br></p>
+</div>
+<div id="section-5" class="section level5">
+<h5>自定義斷詞函式</h5>
+<pre class="r"><code>tokenizer_fun &lt;- function(t) {
+  lapply(t, function(x) {
+    tokens &lt;- segment(x, jieba_tokenizer)              #斷詞
+    tokens &lt;- tokens[nchar(tokens)&gt;1]                  #清除單詞
+    tokens &lt;-gsub(&quot;[^[:alnum:][:space:]&#39;]&quot;,NA,tokens)  #去標點符號
+    tokens &lt;-gsub(&quot;[0-9a-zA-Z]+?&quot;,NA,tokens)           #去除英數字
+    return(tokens)
+  })
+}</code></pre>
+<p><br></p>
+</div>
+<div id="unnest_tokens" class="section level5">
+<h5>使用unnest_tokens以及自定義函式斷詞與計算詞頻</h5>
+<pre class="r"><code>fq_table &lt;- doc %&gt;% 
+unnest_tokens(word, text, token=tokenizer_fun) %&gt;% 
+  na.omit()%&gt;%count(id,word)
+
+fq_table[1:10,] %&gt;%  kable() %&gt;% kable_styling() #第一個文本10個詞</code></pre>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:right;">
+id
+</th>
+<th style="text-align:left;">
+word
+</th>
+<th style="text-align:right;">
+n
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+乃因
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+人工智慧
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+下滑
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+大型
+</td>
+<td style="text-align:right;">
+2
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+大會
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+大廠
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+工業
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+不降反升
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+之故
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+之際
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+</tbody>
+</table>
+<p><br></p>
+</div>
+<div id="bind_tf_idftfidf-tf-idf" class="section level5">
+<h5>使用bind_tf_idf計算Tf、Idf以及 Tf-idf</h5>
+<pre class="r"><code>tf_idf_table &lt;- fq_table  %&gt;% bind_tf_idf(term = word,document = id,n = n)
+tf_idf_table[1:10,] %&gt;%  kable() %&gt;% kable_styling() #第一個文本10個詞</code></pre>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:right;">
+id
+</th>
+<th style="text-align:left;">
+word
+</th>
+<th style="text-align:right;">
+n
+</th>
+<th style="text-align:right;">
+tf
+</th>
+<th style="text-align:right;">
+idf
+</th>
+<th style="text-align:right;">
+tf_idf
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+乃因
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0.00901
+</td>
+<td style="text-align:right;">
+6.6758
+</td>
+<td style="text-align:right;">
+0.06014
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+人工智慧
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0.00901
+</td>
+<td style="text-align:right;">
+3.4177
+</td>
+<td style="text-align:right;">
+0.03079
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+下滑
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0.00901
+</td>
+<td style="text-align:right;">
+2.3320
+</td>
+<td style="text-align:right;">
+0.02101
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+大型
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.01802
+</td>
+<td style="text-align:right;">
+2.5487
+</td>
+<td style="text-align:right;">
+0.04592
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+大會
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0.00901
+</td>
+<td style="text-align:right;">
+4.8841
+</td>
+<td style="text-align:right;">
+0.04400
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+大廠
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0.00901
+</td>
+<td style="text-align:right;">
+2.1985
+</td>
+<td style="text-align:right;">
+0.01981
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+工業
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0.00901
+</td>
+<td style="text-align:right;">
+2.9146
+</td>
+<td style="text-align:right;">
+0.02626
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+不降反升
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0.00901
+</td>
+<td style="text-align:right;">
+6.6758
+</td>
+<td style="text-align:right;">
+0.06014
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+之故
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0.00901
+</td>
+<td style="text-align:right;">
+6.6758
+</td>
+<td style="text-align:right;">
+0.06014
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+之際
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0.00901
+</td>
+<td style="text-align:right;">
+4.5964
+</td>
+<td style="text-align:right;">
+0.04141
+</td>
+</tr>
+</tbody>
+</table>
+<p><br></p>
+</div>
+<div id="section-6" class="section level5">
+<h5>刪除一些沒有用的詞</h5>
+<pre class="r"><code>mystopwords &lt;- tibble(word = c(&quot;乃因&quot;,&quot;之故&quot;,&quot;行已&quot;,&quot;數上&quot;,&quot;比則&quot;))
+tf_idf_table2  &lt;- anti_join(tf_idf_table , mystopwords, by = &quot;word&quot;)</code></pre>
+<p><br></p>
+</div>
+<div id="section-7" class="section level5">
+<h5>每個文本前10重要的詞</h5>
+<pre class="r"><code>top10 &lt;- tf_idf_table2 %&gt;% group_by(id) %&gt;%  top_n(10,tf_idf)  %&gt;% arrange(id,desc(tf_idf))
+
+top10_10 &lt;- NULL
+top10_Wid &lt;- NULL 
+
+i &lt;- 3
+for (i in 1:length(top10$id %&gt;% unique())) {
+  top_i &lt;- top10 %&gt;% filter(id == i)
+  top_i &lt;- top_i[1:10,]
+  top10_10 &lt;- bind_rows(top10_10,top_i)
+  top10_Wid &lt;- bind_cols(top10_Wid,top_i%&gt;% ungroup() %&gt;% select(word))
+}
+top10_Wid[,1:10]%&gt;%  kable() %&gt;% kable_styling()</code></pre>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+word
+</th>
+<th style="text-align:left;">
+word1
+</th>
+<th style="text-align:left;">
+word2
+</th>
+<th style="text-align:left;">
+word3
+</th>
+<th style="text-align:left;">
+word4
+</th>
+<th style="text-align:left;">
+word5
+</th>
+<th style="text-align:left;">
+word6
+</th>
+<th style="text-align:left;">
+word7
+</th>
+<th style="text-align:left;">
+word8
+</th>
+<th style="text-align:left;">
+word9
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+宏碁
+</td>
+<td style="text-align:left;">
+緯創
+</td>
+<td style="text-align:left;">
+照明
+</td>
+<td style="text-align:left;">
+中菲行
+</td>
+<td style="text-align:left;">
+華新科
+</td>
+<td style="text-align:left;">
+資安
+</td>
+<td style="text-align:left;">
+亞通
+</td>
+<td style="text-align:left;">
+美時
+</td>
+<td style="text-align:left;">
+中菲行
+</td>
+<td style="text-align:left;">
+鄭世杰
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+伺服器
+</td>
+<td style="text-align:left;">
+停工
+</td>
+<td style="text-align:left;">
+樓宇
+</td>
+<td style="text-align:left;">
+營業額
+</td>
+<td style="text-align:left;">
+禾伸堂
+</td>
+<td style="text-align:left;">
+關貿
+</td>
+<td style="text-align:left;">
+治療
+</td>
+<td style="text-align:left;">
+藥品
+</td>
+<td style="text-align:left;">
+移動
+</td>
+<td style="text-align:left;">
+南茂
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+躍升
+</td>
+<td style="text-align:left;">
+媒體
+</td>
+<td style="text-align:left;">
+台達電
+</td>
+<td style="text-align:left;">
+前一年
+</td>
+<td style="text-align:left;">
+被動
+</td>
+<td style="text-align:left;">
+鑑識
+</td>
+<td style="text-align:left;">
+質子
+</td>
+<td style="text-align:left;">
+藥廠
+</td>
+<td style="text-align:left;">
+營業毛利
+</td>
+<td style="text-align:left;">
+資本支出
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+不降反升
+</td>
+<td style="text-align:left;">
+澄清
+</td>
+<td style="text-align:left;">
+燈具
+</td>
+<td style="text-align:left;">
+運價
+</td>
+<td style="text-align:left;">
+奇力新
+</td>
+<td style="text-align:left;">
+保險
+</td>
+<td style="text-align:left;">
+機電工程
+</td>
+<td style="text-align:left;">
+夥伴
+</td>
+<td style="text-align:left;">
+網路系統
+</td>
+<td style="text-align:left;">
+螢幕
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+平均水平
+</td>
+<td style="text-align:left;">
+週四
+</td>
+<td style="text-align:left;">
+發光
+</td>
+<td style="text-align:left;">
+移動
+</td>
+<td style="text-align:left;">
+電阻
+</td>
+<td style="text-align:left;">
+企業
+</td>
+<td style="text-align:left;">
+工程
+</td>
+<td style="text-align:left;">
+一張
+</td>
+<td style="text-align:left;">
+並進
+</td>
+<td style="text-align:left;">
+車用
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+第三名
+</td>
+<td style="text-align:left;">
+重訊
+</td>
+<td style="text-align:left;">
+控系統
+</td>
+<td style="text-align:left;">
+年度
+</td>
+<td style="text-align:left;">
+元件
+</td>
+<td style="text-align:left;">
+防禦
+</td>
+<td style="text-align:left;">
+粒子
+</td>
+<td style="text-align:left;">
+韓國
+</td>
+<td style="text-align:left;">
+減約
+</td>
+<td style="text-align:left;">
+滿載
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+發下
+</td>
+<td style="text-align:left;">
+傳言
+</td>
+<td style="text-align:left;">
+安防
+</td>
+<td style="text-align:left;">
+物流
+</td>
+<td style="text-align:left;">
+國巨
+</td>
+<td style="text-align:left;">
+對策
+</td>
+<td style="text-align:left;">
+癌症
+</td>
+<td style="text-align:left;">
+江蘇
+</td>
+<td style="text-align:left;">
+虛實
+</td>
+<td style="text-align:left;">
+谷底
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+認可
+</td>
+<td style="text-align:left;">
+緊急會議
+</td>
+<td style="text-align:left;">
+超廣角
+</td>
+<td style="text-align:left;">
+下滑
+</td>
+<td style="text-align:left;">
+去年同期
+</td>
+<td style="text-align:left;">
+保全
+</td>
+<td style="text-align:left;">
+中心
+</td>
+<td style="text-align:left;">
+中國
+</td>
+<td style="text-align:left;">
+個人電腦
+</td>
+<td style="text-align:left;">
+減少
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+豪語
+</td>
+<td style="text-align:left;">
+一切正常
+</td>
+<td style="text-align:left;">
+燈控
+</td>
+<td style="text-align:left;">
+第四季
+</td>
+<td style="text-align:left;">
+尺寸
+</td>
+<td style="text-align:left;">
+提供
+</td>
+<td style="text-align:left;">
+台大
+</td>
+<td style="text-align:left;">
+貢獻
+</td>
+<td style="text-align:left;">
+航空公司
+</td>
+<td style="text-align:left;">
+上海
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+銳減
+</td>
+<td style="text-align:left;">
+打算
+</td>
+<td style="text-align:left;">
+概念
+</td>
+<td style="text-align:left;">
+及船
+</td>
+<td style="text-align:left;">
+業績
+</td>
+<td style="text-align:left;">
+聯手
+</td>
+<td style="text-align:left;">
+主體
+</td>
+<td style="text-align:left;">
+艾威群
+</td>
+<td style="text-align:left;">
+承攬
+</td>
+<td style="text-align:left;">
+加快腳步
+</td>
+</tr>
+</tbody>
+</table>
+<p><br></p>
+</div>
+<div id="section-8" class="section level5">
+<h5>視覺化前六個文本的前10關鍵詞</h5>
+<pre class="r"><code>tf_idf_table2 %&gt;%
+  filter(id&lt;7) %&gt;% 
+  arrange(desc(tf_idf)) %&gt;%
+  mutate(word = factor(word, levels = rev(unique(word)))) %&gt;% 
+  group_by(id) %&gt;% 
+  top_n(10) %&gt;% 
+  ungroup() %&gt;%
+  ggplot(aes(word, tf_idf, fill = id)) +
+  geom_col(show.legend = TRUE) +
+  labs(x = NULL, y = &quot;tf-idf&quot;) +
+  facet_wrap(~id, ncol = 2, scales = &quot;free&quot;) +
+  coord_flip()#轉置</code></pre>
+<pre><code>Selecting by tf_idf</code></pre>
+<p><img src="/blog/tfidf/TF_Idf_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
+<p><br></p>
+</div>
+<div id="tf--dtm-" class="section level5">
+<h5>轉成一般 TF 為主的 dtm 矩陣</h5>
+<pre class="r"><code>dtm_tf = cast_dtm(tf_idf_table2,id, word, n)
+dim(dtm_tf)</code></pre>
+<pre><code>[1]   793 14167</code></pre>
+<pre class="r"><code>inspect(dtm_tf[1:10,1:10])</code></pre>
+<pre><code>&lt;&lt;DocumentTermMatrix (documents: 10, terms: 10)&gt;&gt;
+Non-/sparse entries: 28/72
+Sparsity           : 72%
+Maximal term length: 4
+Weighting          : term frequency (tf)
+Sample             :
+    Terms
+Docs 人工智慧 下滑 大型 大會 大廠 工業 不降反升 之際 今年 公司
+  1         1    1    2    1    1    1        1    1    1    1
+  10        0    0    0    0    0    0        0    0    7    0
+  2         0    0    0    0    0    0        0    0    0    2
+  3         0    0    1    0    0    1        0    0    0    0
+  4         0    3    0    0    0    0        0    0    0    1
+  5         0    1    0    0    0    0        0    0    2    3
+  6         2    0    0    1    0    0        0    0    0    0
+  7         0    0    0    0    0    0        0    0    2    1
+  8         0    0    1    0    0    0        0    0    2    2
+  9         0    1    0    0    0    0        0    0    0    1</code></pre>
+<p><br></p>
+</div>
+<div id="tf-idf-dtm-" class="section level5">
+<h5>轉成 TF-IDF dtm 矩陣</h5>
+<pre class="r"><code>dtm_tfidf = cast_dtm(tf_idf_table2,id, word, tf_idf)
+dim(dtm_tfidf)</code></pre>
+<pre><code>[1]   793 14167</code></pre>
+<pre class="r"><code>inspect(dtm_tfidf[1:10,1:10])</code></pre>
+<pre><code>&lt;&lt;DocumentTermMatrix (documents: 10, terms: 10)&gt;&gt;
+Non-/sparse entries: 28/72
+Sparsity           : 72%
+Maximal term length: 4
+Weighting          : term frequency (tf)
+Sample             :
+    Terms
+Docs 人工智慧     下滑     大型     大會     大廠     工業 不降反升     之際
+  1  0.030790 0.021009 0.045922 0.044001 0.019806 0.026258 0.060143 0.041409
+  10 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000
+  2  0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000
+  3  0.000000 0.000000 0.014648 0.000000 0.000000 0.016751 0.000000 0.000000
+  4  0.000000 0.055968 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000
+  5  0.000000 0.013480 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000
+  6  0.047468 0.000000 0.000000 0.033917 0.000000 0.000000 0.000000 0.000000
+  7  0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000
+  8  0.000000 0.000000 0.022961 0.000000 0.000000 0.000000 0.000000 0.000000
+  9  0.000000 0.022863 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000
+    Terms
+Docs      今年      公司
+  1  0.0046362 0.0079532
+  10 0.0218322 0.0000000
+  2  0.0000000 0.0091011
+  3  0.0000000 0.0000000
+  4  0.0000000 0.0070625
+  5  0.0059493 0.0153088
+  6  0.0000000 0.0000000
+  7  0.0033417 0.0028663
+  8  0.0092724 0.0159065
+  9  0.0000000 0.0086550</code></pre>
+<p><br></p>
+</div>
+<div id="section-9" class="section level5">
+<h5>餘弦相似性</h5>
+<pre class="r"><code>TF &lt;- as.matrix(dtm_tfidf)
+cosineDist &lt;- function(x){
+  return(x%*%t(x)/(sqrt(rowSums(x^2) %*% t(rowSums(x^2))))) 
+}
+cosSimilar &lt;- cosineDist(TF)</code></pre>
+<p><br></p>
+</div>
+<div id="section-10" class="section level5">
+<h5>抓跟文本最相似的前五名</h5>
+<pre class="r"><code>resultIndex &lt;- apply(cosSimilar, 2, function(col) {
+  return(order(col, decreasing=TRUE)[2:6]);
+})</code></pre>
+<p><br></p>
+</div>
+<div id="section-11" class="section level5">
+<h5>抓自己以及跟文本最相似的前五名</h5>
+<pre class="r"><code>resultName &lt;- apply(cosSimilar, 2, function(col) {
+  return(names(col)[order(col, decreasing=TRUE)[1:6]]);
+})</code></pre>
+<p><br></p>
+</div>
+<div id="section-12" class="section level5">
+<h5>以第一個文本為例子</h5>
+<pre class="r"><code>doc %&gt;% 
+  filter(id%in%resultName[,1])%&gt;%  kable() %&gt;% kable_styling()</code></pre>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+text
+</th>
+<th style="text-align:right;">
+id
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+PC品牌大廠宏碁(2353)轉型有成，利多頻傳，其伺服器Altos再傳捷報！根據IDC資料指出，宏碁Altos去年出貨躍升為全台第三大、市占率為16%，在台灣整體伺服器市場下滑近12%的狀況下，銷售不降反升，表現優於業界平均水平。宏碁表示，從IDC2016及2017公布資料顯示，2016年AcerTaiwan伺服器市占率為13%，排名第四，2017年在市場量銳減之際，逆勢躍升至第三名，主因乃因宏碁積極轉型投入AI人工智慧領域，BigData、Cloud雲端物聯網發展、結合Acer軟、硬體、服務專業整合能力，並經過嚴格測試後，得到政府、大型企業認可，奪下許多大型專案之故。宏碁指出，該公司以豐富的成功案例證明實力，因應未來智慧城市、智慧醫療，乃至於工業4.0各領域龐大市場需求，更積極投入資源，2018成長可期。週三(14日)舉行供應商大會，董事長陳俊聖發下豪語，今年電競PC以美國市佔冠軍為目標，商用產線也成長。
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+筆電品牌大廠宏碁(2353-TW)今(21)日公告去年財報，去年全年稅後純益為28.16億元，由前年全年虧損49億元轉正，每股稅後純益為0.93元，稅後純益與每股純益創近7年新高，也是宏碁三造(2011年)以來表現最好的一年，宏碁董事會也通過去年盈餘分配，每股擬配0.7元現金股利，配發金額也創7年新高，現金殖利率約2.6%。宏碁去年營收為2372.75億元，較前年成長1.98%，毛利率10.7%，創下14年以來新高，營業淨利為36.7億元，為前年的3倍，也創7年以來新高，營益率1.5%，年增0.99個百分點，全年稅後純益為28.16億元，每股純益0.93元。宏碁去年營運表現亮眼，主要受惠電競產品需求成長帶動，此外高速運算(HPC)產品等也陸續傳回捷報，同時旗下轉投資部分如宏星科技(StarVR)等公司營運也穩定，推升宏碁去年整體營運表現亮眼。宏碁去年第4季營收為670.39億元，較第3季增加10.7%，較前年同期成長8.7%，毛利71.48億元，毛利率10.7%，季減0.36個百分點，年增1.68個百分點，營業淨利12.9億元，季增38.3%，年增8.7倍，營益率1.9%，創27季以來新高，稅後純益10.6億元，季減26.8%，也較前年同期虧損轉盈，每股純益為0.35元。宏碁董事會今日也決議，以穩定提供股利為目標，將以資本公積發放現金，依股東持有股數計算，每股擬發放現金股利0.7元，以今日宏碁股價收盤價計算，現金殖利率2.6%。
+</td>
+<td style="text-align:right;">
+254
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+筆電品牌宏碁(2353-TW)今(27)日在智慧城市展宣布，攜手台灣三家醫院，包含臺北醫學大學附設醫院、彰化基督教醫院和高雄醫學大學附設醫院，擴大推動全台遠距健康管理再升級，打造智慧城市雲端健康照護服務。宏碁指出，此次合作將醫療照護、資通訊技術、電子醫護裝置進行跨業合作，結合台灣醫療與科技，力拚智慧照護服務發展。宏碁雲端技術董事長施宣輝表示，遠距醫療照護是全球趨勢，衛福部更在日前預告『通訊診療辦法』草案，可望放寬遠距醫療的服務內容。宏碁在草案上路前，攜手台灣三家遠距照護的先驅醫療團隊，結合科技與醫療線上、線下專業與資源，為智慧城市打造完整的健康照護服務。臺北醫學大學附設醫院副院長蔡淑暖表示，老人照顧及慢性病問題已是現代醫療照護重要議題，遠距醫療照護是良好的解決方案，遠距照護將疾病治療轉移到疾病監控，將急性症狀轉移到慢性疾病的預防保健。透過『遠距設備』開發，『輸送照護』形式的創新，提供新型態的服務。蔡淑暖強調，北醫附醫5年前成立遠距健康照護中心，提供全人、全方位、全時段的服務，首創健康管理師24小時電話線上待命，必要時可與二線值班醫師進行線上諮詢，提供全天候無間斷的居家照護。另外，北醫也透過穿戴裝置等多樣化生理量測儀器，即時掌握會員生理數值，即時掌握、主動追蹤，提供會員個人化、有系統的健康照護，全方位守護會員健康。北醫附醫累積5年遠距健康照護經驗，未來與宏碁合作，將服務對象擴及職場，希望透過精準紀錄、專業監控、即時回應，促進照護者健康，攜手為台灣的健康照護貢獻心力。宏碁指出，現代職場工作一天有超過3分之1時間在職場，世界衛生組織即表示，職場是推動健康促進的優先場所之一，看準遠距醫療前景與職場健康促進的重要性，宏碁自2017年起與彰化基督教醫院攜手，將遠距健康管理系統導入宏碁和友達，提供2家企業職場健康管理系統服務；今年預計擴大職場健康管理服務的合作企業，並共同開發海外市場，樹立醫療院所與科技公司合作的模範。
+</td>
+<td style="text-align:right;">
+479
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+宏碁(2353)參展2018智慧城市展，展出多項移動生活、健康照護與數位看板等各式領域的智慧雲端解決方案，包含智慧電子票證、智慧停車、智雲健康照護平台與智雲數位看板解決方案，以「創新矽島」(Si-nnovationIsland)為願景。宏碁指出，智慧交通是其打造智慧城市的重要實現之一，宏碁身為全台最大公車智慧票證系統供應商，深耕智慧電子票證技術，以可支援多卡應用的智慧驗票機串聯多元票證金流，提供完整、穩定與安全的電子票證服務平台，目前已應用於展場及各式大眾運輸工具。宏碁同時展出雲端智慧停車服務解決方案，透過整合電子票證、車牌辨識、影像辨識、停車APP，針對路邊停車、路外停車等私人運具，提供車主、停車場業者與地方政府具備智慧化、雲端化、提升管理效能的智慧停車服務。其「智慧路邊停車收費計時管理系統」，可令車主透過手機有效降低找車位時間，目前已導入台南，也開始應用至北高兩市。在智慧醫療領域，宏碁說，「打造遠距雲端健康城市，推動智慧醫療再升級」是該公司在智慧醫療領域的願景。aBeingWellness宏碁智雲健康管理平台可以協助醫療服務的相關機構，透過無線健康量測醫療設備與穿戴式裝置，收集生理數據，提供慢性病病友健康監測和遠距照護的服務，是現代人自主健康管理以及高齡化社會照護的新利器。aBeingWellness宏碁智雲健康管理平台今年在智慧城市展中獲頒「智慧城市創新應用獎」。此外，宏碁透過獨家雲端、大數據分析與物聯網整合技術，以「abSignage智雲數位看板解決方案」提供數位行銷一站式服務，透過敏銳的的洞察，打造精準行銷，增加銷售動能。除了台灣，abSignage智雲數位看板解決方案已導入德國與日本，取得初步的成果。
+</td>
+<td style="text-align:right;">
+489
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+英業達(2356)首季雖遇筆電與智慧裝置淡季，但因伺服器換機需求加持，法人預估其3月營收將回升到400億元以上，上探420億元，推升首季營收逾千億元，優於去年同期。展望今年，因筆電持穩，伺服器平穩向上，而智慧裝置替蘋果(Apple)出貨無線耳機與智慧音箱，加上小米手機手機銷售看增，全年EPS估逾2元。英業達公告去年財報，營收達4675.12億元，創下新高紀錄，EPS為1.88元，則為三年新高。該公司董事會決議將配發1.65元現金股利，發放率達87.8%，股息殖利率超過7%。前兩月該公司營收為653.14億元，年增率5%，法人認為，因資料中心換機需求持續，使得首季雖在傳統淡季之下，營收仍獲得支撐，預估首季營收季減率將低於兩成，優於預期。以全年度來看，今年可望呈現逐季成長，歸因於英業達商用筆電占比提升，今年筆電整體出貨量可望維持去年的1800萬台水準，占比達40-45%，伺服器則因資料中心客戶開始轉換Purley新平台而增添成長動能，整體資料中心的雲端伺服器今年比重預估提升至35%，惟亦因如此，平均單價(ASP)與毛利率稍受壓抑；至於智慧裝置，在蘋果與小米兩大客戶的成長效應之下，今年整體出貨量有機會優於去年，因此估全年EPS將突破2元。
+</td>
+<td style="text-align:right;">
+687
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+宏碁(2353)電競攻校園，與樹德家商策略聯盟，建置南台灣最大、世界大賽等級的樹德家商「電子競技運動產學培訓中心」，週六(31日)開幕落成。宏碁指出，其發展電競從根做起，深入校園培育國內電競人才，近期陸續協助眾多學校建置電競教室，並提供產學交流機會，更登上國際舞台機會。其中，樹德家商「電子競技運動產學培訓中心」占地近百坪，耗資逾700萬元，成為南台灣最大的世界大賽等級場域。而此電競運動產學培訓中心不僅採用宏碁電競桌機內建GTX-1080高階顯卡的PredatorG1、Acer曲面電競螢幕、Predator電競椅等周邊，甚至Acer數位看板、賽評主播台、直播轉播台等世界賽專業等級裝備設置，也將成為AcerPredator《英雄聯盟》校際盃南區比賽基地，為參與新年度亞太區Predator電競聯盟大賽暖身，為躍上世界舞台準備。宏碁表示，預見電競產業的未來，電競不只是競賽，要從教育紮根，才能建立完整產業鏈，加速電競發展，宏碁從去年扶持各大學校建置電競教室如靜宜大學、醒吾科技大學及年初協助滬江高中成為AcerPredator《英雄聯盟》校際盃北區比賽基地，這次建構南區基地，陸續增設區域型的比賽基地，串連南北聲勢，以高規格設備帶動高手雲集的賽事。樹德家商電子競技運動產學培訓中心一個月之內完成，以奧運指定遊戲比賽項目為培訓內容，陸續展開校內外的校園盃賽事，積極挑戰高手雲集的電競賽事，更吸引好手加入樹德電競團隊，並成為AcerPredator《英雄聯盟》校際盃南區比賽基地。目前樹德家商正進行電競代表選手遴選，將電競運動列為重點培訓項目，讓學生在此運動上更具競爭力。
+</td>
+<td style="text-align:right;">
+701
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+    
+    
+
+    
+
+    
+
+</main>
+
+        <footer id = "bigfooter">
+            <div style = "padding:15px;">
+                <p>Powered by <a href="https://gohugo.io">Hugo</a>. Themed by <a href="https://github.com/nathancday/min_night">min_night</a>.
+                </p>
+                <a rel="license" href="https://creativecommons.org/licenses/by/4.0/"
+                title="Creative Commons Attribution 4.0 International license">
+                <i class="fab fa-creative-commons" aria-hidden="true"></i> Attribution 4.0 International license
+                </a>
+            </div>
+        </footer>
+        
+        <script async src="https://www.googletagmanager.com/gtag/js?id="></script>
+        <script>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments)};
+          gtag('js', new Date());
+          gtag('config', '');
+        </script>
+       
+    </body>
+
+</html>
+
