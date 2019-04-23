@@ -1,0 +1,173 @@
+---
+date: "2019-04-23"
+draft: false
+tags:
+- R
+title: 量化策略--主力吸貨
+---
+
+
+
+<p><font face="微軟正黑體"></p>
+<hr />
+<pre class="r"><code>library(pacman)
+p_load(tidyverse,magrittr,quantmod)</code></pre>
+<pre class="r"><code>load(&quot;主力/adjStockPriceData.RData&quot;)
+colnames(adjStockPriceData)&lt;-c(&quot;code&quot;,&quot;name&quot;,&quot;date&quot;,&quot;open&quot;,&quot;high&quot;,&quot;low&quot;,&quot;close&quot;,&quot;volume&quot;,&quot;mktvalue&quot;)
+code_list&lt;-unique(adjStockPriceData$code)</code></pre>
+<div id="section" class="section level3">
+<h3>5日均量要9成要大於500張</h3>
+<pre class="r"><code>vol_require&lt;-500
+require_ratio&lt;-0.9
+
+code_Big_Vol&lt;-adjStockPriceData %&gt;% #filter(code==&quot;1101   &quot;)
+  group_by(code) %&gt;%
+  dplyr::filter(n()&gt;=252) %&gt;%
+  mutate(
+    volMA5=SMA(volume,5),
+    is_volbig500=ifelse(volMA5&gt;vol_require,1,0)
+  ) %&gt;% 
+  group_by(code) %&gt;%
+  summarise(volbig500_Ratio=mean(is_volbig500,na.rm=T)) %&gt;%
+  dplyr::filter(volbig500_Ratio&gt;=require_ratio) %&gt;% pull(code)
+
+adjStockPriceData&lt;-adjStockPriceData %&gt;% 
+  dplyr::filter(code %in% code_Big_Vol )</code></pre>
+</div>
+<div id="section-1" class="section level3">
+<h3>找出主力吸貨股票進場位置</h3>
+<pre class="r"><code>standardKdays &lt;- 90   # 標準K棒平均日數
+adjStockPriceData &lt;- adjStockPriceData %&gt;%  
+  group_by(code) %&gt;%
+  dplyr::filter(n()&gt;=standardKdays) %&gt;%        # 股票交易日數需大於標準K棒平均日數                    
+  # 整理判斷條件所需資料
+  mutate(
+    open=as.numeric(open),
+    MA5=SMA(close,5),              # 5日移動平均線
+    MA20=SMA(close,20),            # 20日移動平均線
+    MA60=SMA(close,60),            # 60日移動平均線
+    kbar=abs(open/close-1),        # K棒絕對值大小 
+    standardKbar=rollmean(x=kbar, k=standardKdays,fill=NA, align = &quot;right&quot;), 
+    # 計算標準K棒值長度
+    lagkbar1=dplyr::lag(kbar,1),          # 前一天K棒大小
+    lagkbar2=dplyr::lag(kbar,2),          # 前二天K棒大小
+    lagOpen1=dplyr::lag(open,1),          # 前一天開盤價
+    lagOpen2=dplyr::lag(open,2),          # 前二天開盤價
+    lagClose1=dplyr::lag(close,1),        # 前一天收盤價
+    lagClose2=dplyr::lag(close,2),        # 前二天收盤價
+    leadOpen1=lead(open,1),
+    Buy_date=lead(date,1)
+  )</code></pre>
+</div>
+<div id="section-2" class="section level3">
+<h3>整理進場位置</h3>
+<pre class="r"><code>tradeTargetTable &lt;- adjStockPriceData %&gt;%
+  dplyr::filter(lagClose1&lt;lagOpen1,              # 第t-1天的收盤價&lt;第t-1天的開盤價(黑K)
+         close&gt;open,                      # 第t天的收盤價&gt;第t天的開盤價(紅K)
+         close&gt;MA5,
+         close&gt;lagOpen1,
+         lagClose1&gt;open,
+         kbar&gt;(standardKbar*1.5),          # 第t天的K棒為標準K棒的1.5倍以上
+         lagkbar1&lt;(standardKbar*0.4)) %&gt;%  # 第t-1天的K棒為標準K棒的0.4倍以下
+  select(code, signalDate=date,inDate=Buy_date, inPrice=leadOpen1) </code></pre>
+</div>
+<div id="section-3" class="section level3">
+<h3>整理出場位置</h3>
+<pre class="r"><code>outSiteTable &lt;- adjStockPriceData %&gt;%
+  mutate(outSite=ifelse((close&lt;MA20)&amp;(dplyr::lag(close,1)&gt;dplyr::lag(MA20,1)),1,0)) %&gt;%#出場位置為收盤價跌破MA20
+  dplyr::filter(outSite==1,
+                lagClose1&gt;lagOpen1,              # 第t-1天的收盤價&lt;第t-1天的開盤價(黑K)
+                close&lt;open,                      # 第t天的收盤價&gt;第t天的開盤價(紅K)
+                close&lt;lagOpen1,
+                lagClose1&lt;open,
+                kbar&gt;(standardKbar*1.5),          # 第t天的K棒為標準K棒的1.5倍以上
+                lagkbar1&lt;(standardKbar*0.4)) %&gt;%
+  select(code, outDate=date, outPrice=close)%&gt;%
+  group_by()</code></pre>
+</div>
+<div id="section-4" class="section level3">
+<h3>整理交易明細表</h3>
+<pre class="r"><code>tradeDetailTable &lt;- NULL
+for(ix in 1:nrow(tradeTargetTable)){
+  
+  inDate &lt;- tradeTargetTable$inDate[ix]   # 進場日期
+  stockCode &lt;- tradeTargetTable$code[ix]  # 股票代碼
+  outData &lt;- outSiteTable %&gt;%             # 該支股票代碼資料進場日之後的最近出場日
+    dplyr::filter(code==stockCode, outDate&gt;inDate) %&gt;%
+    dplyr::filter(row_number()==1) %&gt;%
+    select(outDate, outPrice)
+  if(nrow(outData)&gt;0){
+    tradeDetailTable &lt;- bind_rows(tradeDetailTable, bind_cols(tradeTargetTable[ix,], outData))
+  }
+}</code></pre>
+</div>
+<div id="section-5" class="section level3">
+<h3>計算考慮交易成本後之報酬率</h3>
+<pre class="r"><code>buyCostR &lt;- 0.001425
+sellCostR &lt;- 0.004425
+tradeDetailTable$ret &lt;- (tradeDetailTable$outPrice*(1-sellCostR))/(tradeDetailTable$inPrice*(1+buyCostR))-1</code></pre>
+</div>
+<div id="section-6" class="section level3">
+<h3>計算持有期間日數</h3>
+<pre class="r"><code># 日期轉換函數
+DateConvert &lt;- function(x){
+  return(as.Date(paste(substring(x,1,4),substring(x,5,6),substring(x,7,8),sep=&quot;-&quot;,format=&quot;%Y%m%d&quot;)))
+}
+tradeDetailTable$holdDays &lt;- as.numeric(DateConvert(tradeDetailTable$outDate)-DateConvert(tradeDetailTable$inDate))</code></pre>
+</div>
+<div id="section-7" class="section level3">
+<h3>計算相關績效指標</h3>
+<div id="section-8" class="section level4">
+<h4>平均報酬率</h4>
+<pre class="r"><code>meanRet &lt;- mean(tradeDetailTable$ret)</code></pre>
+</div>
+<div id="section-9" class="section level4">
+<h4>報酬率標準差</h4>
+<pre class="r"><code>sdRet &lt;- sd(tradeDetailTable$ret)</code></pre>
+</div>
+<div id="section-10" class="section level4">
+<h4>交易次數</h4>
+<pre class="r"><code>tradeNums &lt;- nrow(tradeDetailTable)</code></pre>
+</div>
+<div id="section-11" class="section level4">
+<h4>勝率</h4>
+<pre class="r"><code>winRatio &lt;- sum(as.numeric(tradeDetailTable$ret&gt;0))/tradeNums</code></pre>
+</div>
+<div id="section-12" class="section level4">
+<h4>最大報酬率</h4>
+<pre class="r"><code>maxRet &lt;- max(tradeDetailTable$ret)</code></pre>
+</div>
+<div id="section-13" class="section level4">
+<h4>最小報酬率</h4>
+<pre class="r"><code>minRet &lt;- min(tradeDetailTable$ret)</code></pre>
+</div>
+<div id="section-14" class="section level4">
+<h4>平均持有天數</h4>
+<pre class="r"><code>avgHoldDays &lt;- mean(tradeDetailTable$holdDays)</code></pre>
+</div>
+<div id="section-15" class="section level4">
+<h4>年化報酬率</h4>
+<pre class="r"><code>Annual_Ret=meanRet*250/avgHoldDays</code></pre>
+</div>
+</div>
+<div id="section-16" class="section level3">
+<h3>輸出結果</h3>
+<pre class="r"><code>cat(paste0(&quot;*********策略回測績效*********\n&quot;,
+           #&quot;回測期間: &quot;,backtestStartDate, &quot; 至 &quot;,backtestEndDate,&quot;\n&quot;,
+           &quot;平均報酬率: &quot;,round(meanRet*100,2),&quot; %\n&quot;,
+           &quot;交易次數: &quot;,tradeNums,&quot; 次\n&quot;,
+           &quot;勝率: &quot;,round(winRatio*100,2),&quot; %\n&quot;,
+           &quot;報酬率標準差: &quot;,round(sdRet*100,2),&quot; %\n&quot;,
+           &quot;最大報酬率: &quot;,round(maxRet*100,2),&quot; %\n&quot;,
+           &quot;最小報酬率: &quot;,round(minRet*100,2),&quot; %\n&quot;,
+           &quot;平均持有日數: &quot;,round(avgHoldDays,2),&quot;天&quot;))</code></pre>
+<pre><code>*********策略回測績效*********
+平均報酬率: 35.64 %
+交易次數: 702 次
+勝率: 60.68 %
+報酬率標準差: 98.38 %
+最大報酬率: 711.46 %
+最小報酬率: -88.52 %
+平均持有日數: 784.79天</code></pre>
+<p></font></p>
+</div>

@@ -1,0 +1,189 @@
+---
+date: "2019-04-23"
+draft: false
+tags:
+- R
+title: 量化策略--主力吸貨
+---
+<font face="微軟正黑體">
+
+---
+
+```{r results='hide', message=FALSE, warning=FALSE, echo=F}
+# 這些程式碼設定網頁的格式，並安裝、載入一些基本的套件，請大家不要去改動<br>
+rm(list=ls(all=T))
+knitr::opts_chunk$set(comment = NA)
+knitr::opts_knit$set(global.par = TRUE)
+par(cex=0.8)
+options(scipen=20, digits=5, width=80)
+if(!require(pacman)) install.packages("pacman")
+```
+```{r message=FALSE, warning=FALSE}
+library(pacman)
+p_load(tidyverse,magrittr,quantmod)
+```
+
+```{r  message=FALSE, warning=FALSE}
+
+load("主力/adjStockPriceData.RData")
+colnames(adjStockPriceData)<-c("code","name","date","open","high","low","close","volume","mktvalue")
+code_list<-unique(adjStockPriceData$code)
+
+```
+
+### 5日均量要9成要大於500張
+```{r  message=FALSE, warning=FALSE}
+vol_require<-500
+require_ratio<-0.9
+
+code_Big_Vol<-adjStockPriceData %>% #filter(code=="1101   ")
+  group_by(code) %>%
+  dplyr::filter(n()>=252) %>%
+  mutate(
+    volMA5=SMA(volume,5),
+    is_volbig500=ifelse(volMA5>vol_require,1,0)
+  ) %>% 
+  group_by(code) %>%
+  summarise(volbig500_Ratio=mean(is_volbig500,na.rm=T)) %>%
+  dplyr::filter(volbig500_Ratio>=require_ratio) %>% pull(code)
+
+adjStockPriceData<-adjStockPriceData %>% 
+  dplyr::filter(code %in% code_Big_Vol )
+
+```
+### 找出主力吸貨股票進場位置
+```{r  message=FALSE, warning=FALSE}
+standardKdays <- 90   # 標準K棒平均日數
+adjStockPriceData <- adjStockPriceData %>%  
+  group_by(code) %>%
+  dplyr::filter(n()>=standardKdays) %>%        # 股票交易日數需大於標準K棒平均日數                    
+  # 整理判斷條件所需資料
+  mutate(
+    open=as.numeric(open),
+    MA5=SMA(close,5),              # 5日移動平均線
+    MA20=SMA(close,20),            # 20日移動平均線
+    MA60=SMA(close,60),            # 60日移動平均線
+    kbar=abs(open/close-1),        # K棒絕對值大小 
+    standardKbar=rollmean(x=kbar, k=standardKdays,fill=NA, align = "right"), 
+    # 計算標準K棒值長度
+    lagkbar1=dplyr::lag(kbar,1),          # 前一天K棒大小
+    lagkbar2=dplyr::lag(kbar,2),          # 前二天K棒大小
+    lagOpen1=dplyr::lag(open,1),          # 前一天開盤價
+    lagOpen2=dplyr::lag(open,2),          # 前二天開盤價
+    lagClose1=dplyr::lag(close,1),        # 前一天收盤價
+    lagClose2=dplyr::lag(close,2),        # 前二天收盤價
+    leadOpen1=lead(open,1),
+    Buy_date=lead(date,1)
+  )
+
+```
+### 整理進場位置
+```{r  message=FALSE, warning=FALSE}
+
+tradeTargetTable <- adjStockPriceData %>%
+  dplyr::filter(lagClose1<lagOpen1,              # 第t-1天的收盤價<第t-1天的開盤價(黑K)
+         close>open,                      # 第t天的收盤價>第t天的開盤價(紅K)
+         close>MA5,
+         close>lagOpen1,
+         lagClose1>open,
+         kbar>(standardKbar*1.5),          # 第t天的K棒為標準K棒的1.5倍以上
+         lagkbar1<(standardKbar*0.4)) %>%  # 第t-1天的K棒為標準K棒的0.4倍以下
+  select(code, signalDate=date,inDate=Buy_date, inPrice=leadOpen1) 
+
+```
+### 整理出場位置
+```{r  message=FALSE, warning=FALSE}
+outSiteTable <- adjStockPriceData %>%
+  mutate(outSite=ifelse((close<MA20)&(dplyr::lag(close,1)>dplyr::lag(MA20,1)),1,0)) %>%#出場位置為收盤價跌破MA20
+  dplyr::filter(outSite==1,
+                lagClose1>lagOpen1,              # 第t-1天的收盤價<第t-1天的開盤價(黑K)
+                close<open,                      # 第t天的收盤價>第t天的開盤價(紅K)
+                close<lagOpen1,
+                lagClose1<open,
+                kbar>(standardKbar*1.5),          # 第t天的K棒為標準K棒的1.5倍以上
+                lagkbar1<(standardKbar*0.4)) %>%
+  select(code, outDate=date, outPrice=close)%>%
+  group_by()
+```
+### 整理交易明細表
+```{r  message=FALSE, warning=FALSE}
+tradeDetailTable <- NULL
+for(ix in 1:nrow(tradeTargetTable)){
+  
+  inDate <- tradeTargetTable$inDate[ix]   # 進場日期
+  stockCode <- tradeTargetTable$code[ix]  # 股票代碼
+  outData <- outSiteTable %>%             # 該支股票代碼資料進場日之後的最近出場日
+    dplyr::filter(code==stockCode, outDate>inDate) %>%
+    dplyr::filter(row_number()==1) %>%
+    select(outDate, outPrice)
+  if(nrow(outData)>0){
+    tradeDetailTable <- bind_rows(tradeDetailTable, bind_cols(tradeTargetTable[ix,], outData))
+  }
+}
+```
+### 計算考慮交易成本後之報酬率
+```{r message=FALSE, warning=FALSE}
+buyCostR <- 0.001425
+sellCostR <- 0.004425
+tradeDetailTable$ret <- (tradeDetailTable$outPrice*(1-sellCostR))/(tradeDetailTable$inPrice*(1+buyCostR))-1
+
+```
+### 計算持有期間日數
+
+```{r message=FALSE, warning=FALSE}
+# 日期轉換函數
+DateConvert <- function(x){
+  return(as.Date(paste(substring(x,1,4),substring(x,5,6),substring(x,7,8),sep="-",format="%Y%m%d")))
+}
+tradeDetailTable$holdDays <- as.numeric(DateConvert(tradeDetailTable$outDate)-DateConvert(tradeDetailTable$inDate))
+
+```
+### 計算相關績效指標
+
+#### 平均報酬率
+```{r message=FALSE, warning=FALSE}
+meanRet <- mean(tradeDetailTable$ret)
+```
+#### 報酬率標準差
+```{r message=FALSE, warning=FALSE}
+sdRet <- sd(tradeDetailTable$ret)
+```
+#### 交易次數
+```{r message=FALSE, warning=FALSE}
+tradeNums <- nrow(tradeDetailTable)
+```
+#### 勝率
+```{r message=FALSE, warning=FALSE}
+winRatio <- sum(as.numeric(tradeDetailTable$ret>0))/tradeNums
+```
+#### 最大報酬率
+```{r message=FALSE, warning=FALSE}
+maxRet <- max(tradeDetailTable$ret)
+```
+#### 最小報酬率
+```{r message=FALSE, warning=FALSE}
+minRet <- min(tradeDetailTable$ret)
+```
+#### 平均持有天數
+```{r message=FALSE, warning=FALSE}
+avgHoldDays <- mean(tradeDetailTable$holdDays)
+```
+#### 年化報酬率
+```{r message=FALSE, warning=FALSE}
+Annual_Ret=meanRet*250/avgHoldDays
+
+```
+### 輸出結果
+```{r}
+cat(paste0("*********策略回測績效*********\n",
+           #"回測期間: ",backtestStartDate, " 至 ",backtestEndDate,"\n",
+           "平均報酬率: ",round(meanRet*100,2)," %\n",
+           "交易次數: ",tradeNums," 次\n",
+           "勝率: ",round(winRatio*100,2)," %\n",
+           "報酬率標準差: ",round(sdRet*100,2)," %\n",
+           "最大報酬率: ",round(maxRet*100,2)," %\n",
+           "最小報酬率: ",round(minRet*100,2)," %\n",
+           "平均持有日數: ",round(avgHoldDays,2),"天"))
+```
+
+</font>

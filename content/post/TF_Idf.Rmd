@@ -1,13 +1,12 @@
 ---
-author: 張傳銘
-date: "2019-04-23"
-draft: false
+title: 財金文字探勘專題-- R Tfidf 實作
+author:  張傳銘
+date: "`r Sys.time()`"
 tags:
 - R
-- Text Mining
-title: R Tfidf 實作
-type: post
 ---
+
+<font face="微軟正黑體">
 
 ```{r results='hide', message=FALSE, warning=FALSE, echo=F}
 # 這些程式碼設定網頁的格式，並安裝、載入一些基本的套件，請大家不要去改動<br>
@@ -20,15 +19,14 @@ if(!require(pacman)) install.packages("pacman")
 ```
 <hr>
 <p class="qiz">
-<span style="font-size:24px">`r "\U1F393"` <font face="微軟正黑體">前言</font>
+<span style="font-size:24px">`r "\U1F393"`<font face="微軟正黑體">
+ 前言</font>
 </span><br>
 </p class="qiz">
 
-<font face="微軟正黑體">
-
  *tfidf 是一種在文字探勘中技巧，使用tf詞頻以及 idf 逆詞頻的相乘，去計算每個字詞在整體文本的重要性，本篇是要以R實作有關中文財經新聞的tfidf，去尋找每一篇的關鍵字，以及使用餘弦相似性，快速尋找相似的新聞文本 *
 
-## 讀取必要套件包
+##### 讀取必要套件包
 ```{r message=FALSE}
 library(pacman)
 p_load(jiebaR,jiebaRD,data.table,readr,stringr,tidytext,rio,tidyverse,tm,tmcn,kableExtra)
@@ -36,7 +34,7 @@ p_load(jiebaR,jiebaRD,data.table,readr,stringr,tidytext,rio,tidyverse,tm,tmcn,ka
 ```
 <br>
 
-## 讀取文本檔案
+##### 讀取文本檔案
 
 ```{r  message=FALSE}
 word <- read_csv("tfidf/文本.csv")
@@ -48,7 +46,7 @@ words %>% head(2) %>% kable()%>% kable_styling()
 ```
 <br>
 
-## 對每篇標ID
+##### 對每篇標ID
 
 ```{r  message=FALSE}
 words %>% mutate(id = 1:n()) -> doc
@@ -59,7 +57,7 @@ doc %>% head(2) %>%  kable() %>% kable_styling()
 ```
 <br>
 
-## 讀取財經詞庫與理財用詞詞庫，來源自搜狗詞庫
+##### 讀取財經詞庫與理財用詞詞庫，來源自搜狗詞庫
 ```{r message=FALSE,warning=FALSE}
 f<-readLines('tfidf/financial word.txt',encoding = "UTF-8")
 q<-readLines('tfidf/理財_0402.txt',encoding = "UTF-8")
@@ -67,7 +65,7 @@ load("tfidf/股票公司名稱.RData")
 ```
 <br>
 
-## 詞庫原本為簡體字，所以需要轉成繁體
+##### 詞庫原本為簡體字，所以需要轉成繁體
 ```{r message=FALSE}
 f1 <- toTrad(f)
 q1 <- toTrad(q)
@@ -75,14 +73,14 @@ head(q1)
 ```
 <br>
 
-## 初始化斷詞引擎
+##### 初始化斷詞引擎
 ```{r message=FALSE}
 jieba_tokenizer <- worker(stop_word = "tfidf/stop2.txt")
 
 ```
 <br>
 
-## jieba詞庫新增 
+##### jieba詞庫新增 
 ```{r message=FALSE,warning=FALSE}
 new_user_word(jieba_tokenizer, f1) #財經用詞詞庫
 new_user_word(jieba_tokenizer, q1) #理財用詞詞庫
@@ -90,7 +88,7 @@ new_user_word(jieba_tokenizer, symbolsALL2) #股票公司名稱
 ```
 <br>
 
-## 自定義斷詞函式
+##### 自定義斷詞函式
 ```{r message=FALSE}
 tokenizer_fun <- function(t) {
   lapply(t, function(x) {
@@ -104,7 +102,7 @@ tokenizer_fun <- function(t) {
 ```
 <br>
 
-## 使用unnest_tokens以及自定義函式斷詞與計算詞頻
+##### 使用unnest_tokens以及自定義函式斷詞與計算詞頻
 ```{r message=FALSE}
 fq_table <- doc %>% 
 unnest_tokens(word, text, token=tokenizer_fun) %>% 
@@ -114,7 +112,7 @@ fq_table[1:10,] %>%  kable() %>% kable_styling() #第一個文本10個詞
 ```
 <br>
 
-## 使用bind_tf_idf計算Tf、Idf以及 Tf-idf
+##### 使用bind_tf_idf計算Tf、Idf以及 Tf-idf
 ```{r message=FALSE}
 tf_idf_table <- fq_table  %>% bind_tf_idf(term = word,document = id,n = n)
 tf_idf_table[1:10,] %>%  kable() %>% kable_styling() #第一個文本10個詞
@@ -122,14 +120,14 @@ tf_idf_table[1:10,] %>%  kable() %>% kable_styling() #第一個文本10個詞
 ```
 <br>
 
-## 刪除一些沒有用的詞
+##### 刪除一些沒有用的詞
 ```{r message=FALSE}
 mystopwords <- tibble(word = c("乃因","之故","行已","數上","比則"))
 tf_idf_table2  <- anti_join(tf_idf_table , mystopwords, by = "word")
 ```
 <br>
 
-## 每個文本前10重要的詞
+##### 每個文本前10重要的詞
 ```{r message=FALSE}
 top10 <- tf_idf_table2 %>% group_by(id) %>%  top_n(10,tf_idf)  %>% arrange(id,desc(tf_idf))
 
@@ -147,7 +145,7 @@ top10_Wid[,1:10]%>%  kable() %>% kable_styling()
 ```
 <br>
 
-## 視覺化前六個文本的前10關鍵詞
+##### 視覺化前六個文本的前10關鍵詞
 ```{r}
 
 tf_idf_table2 %>%
@@ -166,7 +164,7 @@ tf_idf_table2 %>%
 
 <br>
 
-## 轉成一般 TF 為主的 dtm 矩陣
+##### 轉成一般 TF 為主的 dtm 矩陣
 
 ```{r}
 dtm_tf = cast_dtm(tf_idf_table2,id, word, n)
@@ -177,7 +175,7 @@ inspect(dtm_tf[1:10,1:10])
 
 <br>
 
-## 轉成 TF-IDF dtm 矩陣
+##### 轉成 TF-IDF dtm 矩陣
 ```{r}
 
 dtm_tfidf = cast_dtm(tf_idf_table2,id, word, tf_idf)
@@ -187,7 +185,7 @@ inspect(dtm_tfidf[1:10,1:10])
 
 <br>
 
-## 餘弦相似性
+##### 餘弦相似性
 ```{r}
 TF <- as.matrix(dtm_tfidf)
 cosineDist <- function(x){
@@ -198,7 +196,7 @@ cosSimilar <- cosineDist(TF)
 
 <br>
 
-## 抓跟文本最相似的前五名
+##### 抓跟文本最相似的前五名
 ```{r}
 resultIndex <- apply(cosSimilar, 2, function(col) {
   return(order(col, decreasing=TRUE)[2:6]);
@@ -207,7 +205,7 @@ resultIndex <- apply(cosSimilar, 2, function(col) {
 
 <br>
 
-## 抓自己以及跟文本最相似的前五名
+##### 抓自己以及跟文本最相似的前五名
 ```{r}
 resultName <- apply(cosSimilar, 2, function(col) {
   return(names(col)[order(col, decreasing=TRUE)[1:6]]);
@@ -216,7 +214,7 @@ resultName <- apply(cosSimilar, 2, function(col) {
 ```
 <br>
 
-## 以第一個文本為例子
+##### 以第一個文本為例子
 
 ```{r}
 doc %>% 
@@ -224,8 +222,7 @@ doc %>%
 
 ```
 
-
-
 </font>
+
 
 

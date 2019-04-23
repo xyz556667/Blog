@@ -6,7 +6,7 @@
     <description>Recent content on chuanMing</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 23 Apr 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 23 Apr 2019 23:53:48 +0000</lastBuildDate>
     
 	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     
@@ -48,16 +48,16 @@
     </item>
     
     <item>
-      <title>R Tfidf 實作</title>
-      <link>/2019/04/23/r-tfidf-%E5%AF%A6%E4%BD%9C/</link>
-      <pubDate>Tue, 23 Apr 2019 00:00:00 +0000</pubDate>
+      <title>財金文字探勘專題-- R Tfidf 實作</title>
+      <link>/2019/04/23/%E8%B2%A1%E9%87%91%E6%96%87%E5%AD%97%E6%8E%A2%E5%8B%98%E5%B0%88%E9%A1%8C-r-tfidf-%E5%AF%A6%E4%BD%9C/</link>
+      <pubDate>Tue, 23 Apr 2019 23:53:48 +0000</pubDate>
       
-      <guid>/2019/04/23/r-tfidf-%E5%AF%A6%E4%BD%9C/</guid>
-      <description>🎓 前言
+      <guid>/2019/04/23/%E8%B2%A1%E9%87%91%E6%96%87%E5%AD%97%E6%8E%A2%E5%8B%98%E5%B0%88%E9%A1%8C-r-tfidf-%E5%AF%A6%E4%BD%9C/</guid>
+      <description>🎓前言
 tfidf 是一種在文字探勘中技巧，使用tf詞頻以及 idf 逆詞頻的相乘，去計算每個字詞在整體文本的重要性，本篇是要以R實作有關中文財經新聞的tfidf，去尋找每一篇的關鍵字，以及使用餘弦相似性，快速尋找相似的新聞文本 
 讀取必要套件包library(pacman)p_load(jiebaR,jiebaRD,data.table,readr,stringr,tidytext,rio,tidyverse,tm,tmcn,kableExtra)
 讀取文本檔案word &amp;lt;- read_csv(&amp;quot;tfidf/文本.csv&amp;quot;)words &amp;lt;- word %&amp;gt;% na.omit() %&amp;gt;% select(text)textPC品牌大廠宏碁(2353)轉型有成，利多頻傳，其伺服器Altos再傳捷報！根據IDC資料指出，宏碁Altos去年出貨躍升為全台第三大、市占率為16%，在台灣整體伺服器市場下滑近12%的狀況下，銷售不降反升，表現優於業界平均水平。宏碁表示，從IDC2016及2017公布資料顯示，2016年AcerTaiwan伺服器市占率為13%，排名第四，2017年在市場量銳減之際，逆勢躍升至第三名，主因乃因宏碁積極轉型投入AI人工智慧領域，BigData、Cloud雲端物聯網發展、結合Acer軟、硬體、服務專業整合能力，並經過嚴格測試後，得到政府、大型企業認可，奪下許多大型專案之故。宏碁指出，該公司以豐富的成功案例證明實力，因應未來智慧城市、智慧醫療，乃至於工業4.0各領域龐大市場需求，更積極投入資源，2018成長可期。週三(14日)舉行供應商大會，董事長陳俊聖發下豪語，今年電競PC以美國市佔冠軍為目標，商用產線也成長。緯創(3231)遭外界指控因生產iPhone的管理誠信問題，遭蘋果要求停工兩週，導致週四(15日)股價跳空重挫。據悉，緯創在上午內部緊急會議、並取得客戶的認同之後，僅以上傳重訊的方式低調否認停工兩周傳言，稱目前營運一切正常。此項傳言在本週緯創一連串利多，包括外資調升評等以及法說會釋出樂觀展望，被媒體以「緯創轉骨」為標題大肆報導，令股價連日大漲、短線漲幅近15%之後傳出，格外敏感，也重創緯創聲譽。不過，緯創對此並未打算太過追究，也不打算訴諸法律以維護其股東權益，僅以重訊的方式澄清，據緯創指出是考慮牽涉到客戶機密的複雜性才低調處理。緯創表示，在上午的緊急會議中，一方面是在內部確認媒體所報導的情況是否屬實，另一方面則是要定調處理的方式。由於事涉客戶機密，敏感度高，因此最後決定採取外界最關切的「停工」與否的問題作為基礎來澄清。該公司重訊強調，並無外傳停工兩周的狀況，目前營運一切正常。而這樣的處理方式，則是取得「客戶」的認同，嚴控損害範圍。事實上，緯創透露，在週四特定媒體披露此事之前，市場上已有耳語傳出，也有其他媒體接獲此一傳言，不過只有一家媒體做出處理，該公司在週三(14日)與週四均對此做出回應。緯創股價週四以25.4元、跳空5.7%開出低盤，隨著緯創近10點發出重訊澄清之後，買盤湧入，股價一路震盪走高，最高來到26.7元，跌幅縮減到0.9%或0.25元，終場則收在26.5元，下跌0.45元或1.67%，線型上拉出一根紅K棒，外資力挺，持續大買5,477張。
-對每篇標IDwords %&amp;gt;% mutate(id = 1:n()) -&amp;gt; doctextidPC品牌大廠宏碁(2353)轉型有成，利多頻傳，其伺服器Altos再傳捷報！根據IDC資料指出，宏碁Altos去年出貨躍升為全台第三大、市占率為16%，在台灣整體伺服器市場下滑近12%的狀況下，銷售不降反升，表現優於業界平均水平。宏碁表示，從IDC2016及2017公布資料顯示，2016年AcerTaiwan伺服器市占率為13%，排名第四，2017年在市場量銳減之際，逆勢躍升至第三名，主因乃因宏碁積極轉型投入AI人工智慧領域，BigData、Cloud雲端物聯網發展、結合Acer軟、硬體、服務專業整合能力，並經過嚴格測試後，得到政府、大型企業認可，奪下許多大型專案之故。宏碁指出，該公司以豐富的成功案例證明實力，因應未來智慧城市、智慧醫療，乃至於工業4.0各領域龐大市場需求，更積極投入資源，2018成長可期。週三(14日)舉行供應商大會，董事長陳俊聖發下豪語，今年電競PC以美國市佔冠軍為目標，商用產線也成長。1緯創(3231)遭外界指控因生產iPhone的管理誠信問題，遭蘋果要求停工兩週，導致週四(15日)股價跳空重挫。據悉，緯創在上午內部緊急會議、並取得客戶的認同之後，僅以上傳重訊的方式低調否認停工兩周傳言，稱目前營運一切正常。此項傳言在本週緯創一連串利多，包括外資調升評等以及法說會釋出樂觀展望，被媒體以「緯創轉骨」為標題大肆報導，令股價連日大漲、短線漲幅近15%之後傳出，格外敏感，也重創緯創聲譽。不過，緯創對此並未打算太過追究，也不打算訴諸法律以維護其股東權益，僅以重訊的方式澄清，據緯創指出是考慮牽涉到客戶機密的複雜性才低調處理。緯創表示，在上午的緊急會議中，一方面是在內部確認媒體所報導的情況是否屬實，另一方面則是要定調處理的方式。由於事涉客戶機密，敏感度高，因此最後決定採取外界最關切的「停工」與否的問題作為基礎來澄清。該公司重訊強調，並無外傳停工兩周的狀況，目前營運一切正常。而這樣的處理方式，則是取得「客戶」的認同，嚴控損害範圍。事實上，緯創透露，在週四特定媒體披露此事之前，市場上已有耳語傳出，也有其他媒體接獲此一傳言，不過只有一家媒體做出處理，該公司在週三(14日)與週四均對此做出回應。緯創股價週四以25.</description>
+對每篇標IDwords %&amp;gt;% mutate(id = 1:n()) -&amp;gt; doctextidPC品牌大廠宏碁(2353)轉型有成，利多頻傳，其伺服器Altos再傳捷報！根據IDC資料指出，宏碁Altos去年出貨躍升為全台第三大、市占率為16%，在台灣整體伺服器市場下滑近12%的狀況下，銷售不降反升，表現優於業界平均水平。宏碁表示，從IDC2016及2017公布資料顯示，2016年AcerTaiwan伺服器市占率為13%，排名第四，2017年在市場量銳減之際，逆勢躍升至第三名，主因乃因宏碁積極轉型投入AI人工智慧領域，BigData、Cloud雲端物聯網發展、結合Acer軟、硬體、服務專業整合能力，並經過嚴格測試後，得到政府、大型企業認可，奪下許多大型專案之故。宏碁指出，該公司以豐富的成功案例證明實力，因應未來智慧城市、智慧醫療，乃至於工業4.0各領域龐大市場需求，更積極投入資源，2018成長可期。週三(14日)舉行供應商大會，董事長陳俊聖發下豪語，今年電競PC以美國市佔冠軍為目標，商用產線也成長。1緯創(3231)遭外界指控因生產iPhone的管理誠信問題，遭蘋果要求停工兩週，導致週四(15日)股價跳空重挫。據悉，緯創在上午內部緊急會議、並取得客戶的認同之後，僅以上傳重訊的方式低調否認停工兩周傳言，稱目前營運一切正常。此項傳言在本週緯創一連串利多，包括外資調升評等以及法說會釋出樂觀展望，被媒體以「緯創轉骨」為標題大肆報導，令股價連日大漲、短線漲幅近15%之後傳出，格外敏感，也重創緯創聲譽。不過，緯創對此並未打算太過追究，也不打算訴諸法律以維護其股東權益，僅以重訊的方式澄清，據緯創指出是考慮牽涉到客戶機密的複雜性才低調處理。緯創表示，在上午的緊急會議中，一方面是在內部確認媒體所報導的情況是否屬實，另一方面則是要定調處理的方式。由於事涉客戶機密，敏感度高，因此最後決定採取外界最關切的「停工」與否的問題作為基礎來澄清。該公司重訊強調，並無外傳停工兩周的狀況，目前營運一切正常。而這樣的處理方式，則是取得「客戶」的認同，嚴控損害範圍。事實上，緯創透露，在週四特定媒體披露此事之前，市場上已有耳語傳出，也有其他媒體接獲此一傳言，不過只有一家媒體做出處理，該公司在週三(14日)與週四均對此做出回應。緯創股價週四以25.4元、跳空5.7%開出低盤，隨著緯創近10點發出重訊澄清之後，買盤湧入，股價一路震盪走高，最高來到26.7元，跌幅縮減到0.9%或0.25元，終場則收在26.5元，下跌0.45元或1.67%，線型上拉出一根紅K棒，外資力挺，持續大買5,477張。2</description>
     </item>
     
     <item>
@@ -76,6 +76,24 @@ tfidf 是一種在文字探勘中技巧，使用tf詞頻以及 idf 逆詞頻的�
 2. 情緒分析 : 識別和提取文本中的主觀信息(例如:情感、信仰)。- 滿意度調查 (ex.對餐廳服務的滿意度)- 電影評論分析 (ex.根據電影評埨，分析大眾對電影的喜好程度)- 股票情緒分析 (ex.根據新聞內容，分析市場對股票的樂觀或悲觀態度)
 3. 關鍵字提取 : 識別和提取文本中的最重要的元素。- 搜尋引擎 (ex.Google搜尋器，藉由搜尋的關鍵字，抓取相關內容)- 聲量調查 (ex.透過關鍵字的出現次數，觀察近期的熱門議題為何)- 熱門股票分析 (ex.根據關鍵字出現的頻率，觀察近期熱門股票趨勢)
 4. 文本摘要 : 創建包含最重要元素的縮短版本的文本。- 新聞摘要 (ex.</description>
+    </item>
+    
+    <item>
+      <title>量化策略--主力吸貨</title>
+      <link>/2019/04/23/%E9%87%8F%E5%8C%96%E7%AD%96%E7%95%A5-%E4%B8%BB%E5%8A%9B%E5%90%B8%E8%B2%A8/</link>
+      <pubDate>Tue, 23 Apr 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/2019/04/23/%E9%87%8F%E5%8C%96%E7%AD%96%E7%95%A5-%E4%B8%BB%E5%8A%9B%E5%90%B8%E8%B2%A8/</guid>
+      <description>library(pacman)p_load(tidyverse,magrittr,quantmod)load(&amp;quot;主力/adjStockPriceData.RData&amp;quot;)colnames(adjStockPriceData)&amp;lt;-c(&amp;quot;code&amp;quot;,&amp;quot;name&amp;quot;,&amp;quot;date&amp;quot;,&amp;quot;open&amp;quot;,&amp;quot;high&amp;quot;,&amp;quot;low&amp;quot;,&amp;quot;close&amp;quot;,&amp;quot;volume&amp;quot;,&amp;quot;mktvalue&amp;quot;)code_list&amp;lt;-unique(adjStockPriceData$code)5日均量要9成要大於500張vol_require&amp;lt;-500require_ratio&amp;lt;-0.9code_Big_Vol&amp;lt;-adjStockPriceData %&amp;gt;% #filter(code==&amp;quot;1101 &amp;quot;)group_by(code) %&amp;gt;%dplyr::filter(n()&amp;gt;=252) %&amp;gt;%mutate(volMA5=SMA(volume,5),is_volbig500=ifelse(volMA5&amp;gt;vol_require,1,0)) %&amp;gt;% group_by(code) %&amp;gt;%summarise(volbig500_Ratio=mean(is_volbig500,na.rm=T)) %&amp;gt;%dplyr::filter(volbig500_Ratio&amp;gt;=require_ratio) %&amp;gt;% pull(code)adjStockPriceData&amp;lt;-adjStockPriceData %&amp;gt;% dplyr::filter(code %in% code_Big_Vol )找出主力吸貨股票進場位置standardKdays &amp;lt;- 90 # 標準K棒平均日數adjStockPriceData &amp;lt;- adjStockPriceData %&amp;gt;% group_by(code) %&amp;gt;%dplyr::filter(n()&amp;gt;=standardKdays) %&amp;gt;% # 股票交易日數需大於標準K棒平均日數 # 整理判斷條件所需資料mutate(open=as.numeric(open),MA5=SMA(close,5), # 5日移動平均線MA20=SMA(close,20), # 20日移動平均線MA60=SMA(close,60), # 60日移動平均線kbar=abs(open/close-1), # K棒絕對值大小 standardKbar=rollmean(x=kbar, k=standardKdays,fill=NA, align = &amp;quot;right&amp;quot;), # 計算標準K棒值長度lagkbar1=dplyr::lag(kbar,1), # 前一天K棒大小lagkbar2=dplyr::lag(kbar,2), # 前二天K棒大小lagOpen1=dplyr::lag(open,1), # 前一天開盤價lagOpen2=dplyr::lag(open,2), # 前二天開盤價lagClose1=dplyr::lag(close,1), # 前一天收盤價lagClose2=dplyr::lag(close,2), # 前二天收盤價leadOpen1=lead(open,1),Buy_date=lead(date,1))整理進場位置tradeTargetTable &amp;lt;- adjStockPriceData %&amp;gt;%dplyr::filter(lagClose1&amp;lt;lagOpen1, # 第t-1天的收盤價&amp;lt;第t-1天的開盤價(黑K)close&amp;gt;open, # 第t天的收盤價&amp;gt;第t天的開盤價(紅K)close&amp;gt;MA5,close&amp;gt;lagOpen1,lagClose1&amp;gt;open,kbar&amp;gt;(standardKbar*1.</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>/1/01/01/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/1/01/01/</guid>
+      <description>量化策略–主力吸貨/*! jQuery v1.11.3 | (c) 2005, 2015 jQuery Foundation, Inc. | jquery.org/license */!function(a,b){&#34;object&#34;==typeof module&amp;&amp;&#34;object&#34;==typeof module.exports?module.exports=a.document?b(a,!0):function(a){if(!a.document)throw new Error(&#34;jQuery requires a window with a document&#34;);return b(a)}:b(a)}(&#34;undefined&#34;!=typeof window?window:this,function(a,b){var c=[],d=c.slice,e=c.concat,f=c.push,g=c.indexOf,h={},i=h.toString,j=h.hasOwnProperty,k={},l=&#34;1.11.3&#34;,m=function(a,b){return new m.fn.init(a,b)},n=/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g,o=/^-ms-/,p=/-([\da-z])/gi,q=function(a,b){return b.toUpperCase()};m.fn=m.prototype={jquery:l,constructor:m,selector:&#34;&#34;,length:0,toArray:function(){return d.call(this)},get:function(a){return null!=a?0a?this[a+this.length]:this[a]:d.call(this)},pushStack:function(a){var b=m.merge(this.constructor(),a);return b.prevObject=this,b.context=this.context,b},each:function(a,b){return m.each(this,a,b)},map:function(a){return this.pushStack(m.map(this,function(b,c){return a.call(b,c,b)}))},slice:function(){return this.pushStack(d.apply(this,arguments))},first:function(){return this.eq(0)},last:function(){return this.eq(-1)},eq:function(a){var b=this.length,c=+a+(0a?b:0);return this.pushStack(c=0&amp;&amp;bc?[this[c]]:[])},end:function(){return this.prevObject||this.constructor(null)},push:f,sort:c.sort,splice:c.splice},m.extend=m.fn.extend=function(){var a,b,c,d,e,f,g=arguments[0]||{},h=1,i=arguments.length,j=!1;for(&#34;boolean&#34;==typeof g&amp;&amp;(j=g,g=arguments[h]||{},h++),&#34;object&#34;==typeof g||m.isFunction(g)||(g={}),h===i&amp;&amp;(g=this,h--);ih;h++)if(null!=(e=arguments[h]))for(d in e)a=g[d],c=e[d],g!==c&amp;&amp;(j&amp;&amp;c&amp;&amp;(m.isPlainObject(c)||(b=m.isArray(c)))?(b?(b=!1,f=a&amp;&amp;m.isArray(a)?a:[]):f=a&amp;&amp;m.isPlainObject(a)?a:{},g[d]=m.extend(j,f,c)):void 0!==c&amp;&amp;(g[d]=c));return g},m.extend({expando:&#34;jQuery&#34;+(l+Math.random()).replace(/\D/g,&#34;&#34;),isReady:!0,error:function(a){throw new Error(a)},noop:function(){},isFunction:function(a){return&#34;function&#34;===m.type(a)},isArray:Array.isArray||function(a){return&#34;array&#34;===m.type(a)},isWindow:function(a){return null!=a&amp;&amp;a==a.window},isNumeric:function(a){return!m.isArray(a)&amp;&amp;a-parseFloat(a)+1=0},isEmptyObject:function(a){var b;for(b in a)return!1;return!0},isPlainObject:function(a){var b;if(!a||&#34;object&#34;!==m.type(a)||a.nodeType||m.isWindow(a))return!1;try{if(a.constructor&amp;&amp;!j.call(a,&#34;constructor&#34;)&amp;&amp;!j.call(a.constructor.prototype,&#34;isPrototypeOf&#34;))return!1}catch(c){return!1}if(k.ownLast)for(b in a)return j.call(a,b);for(b in a);return void 0===b||j.call(a,b)},type:function(a){return null==a?a+&#34;&#34;:&#34;object&#34;==typeof a||&#34;function&#34;==typeof a?h[i.call(a)]||&#34;object&#34;:typeof a},globalEval:function(b){b&amp;&amp;m.trim(b)&amp;&amp;(a.execScript||function(b){a.eval.call(a,b)})(b)},camelCase:function(a){return a.</description>
     </item>
     
   </channel>
