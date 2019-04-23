@@ -1,7 +1,7 @@
 ---
 title: 財金文字探勘專題-- R Tfidf 實作
 author:  張傳銘
-date: "`r Sys.time()`"
+date: "2019-04-24"
 tags:
 - R
 ---
