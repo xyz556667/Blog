@@ -115,7 +115,7 @@ $(document).ready(function(){
     <meta property="og:type" content="article">
       
       <meta name="twitter:card" content="summary">
-      <meta name="twitter:image" content="/favicon/android-chrome-192x192.png" >
+      <meta name="twitter:image" content="/icon02.png" >
       
     <meta property="description" content="">
     <meta property="og:description" content="">
@@ -220,14 +220,14 @@ $(document).ready(function(){
 </span><br>
 </p class="qiz">
 <p><em>tfidf 是一種在文字探勘中技巧，使用tf詞頻以及 idf 逆詞頻的相乘，去計算每個字詞在整體文本的重要性，本篇是要以R實作有關中文財經新聞的tfidf，去尋找每一篇的關鍵字，以及使用餘弦相似性，快速尋找相似的新聞文本 </em></p>
-<div id="section" class="section level5">
-<h5>讀取必要套件包</h5>
+<div id="section" class="section level3">
+<h3>讀取必要套件包</h3>
 <pre class="r"><code>library(pacman)
 p_load(jiebaR,jiebaRD,data.table,readr,stringr,tidytext,rio,tidyverse,tm,tmcn,kableExtra)</code></pre>
 <p><br></p>
 </div>
-<div id="section-1" class="section level5">
-<h5>讀取文本檔案</h5>
+<div id="section-1" class="section level3">
+<h3>讀取文本檔案</h3>
 <pre class="r"><code>word &lt;- read_csv(&quot;tfidf/文本.csv&quot;)
 words &lt;- word %&gt;% na.omit() %&gt;% select(text)</code></pre>
 <table class="table" style="margin-left: auto; margin-right: auto;">
@@ -253,8 +253,8 @@ PC品牌大廠宏碁(2353)轉型有成，利多頻傳，其伺服器Altos再傳�
 </table>
 <p><br></p>
 </div>
-<div id="id" class="section level5">
-<h5>對每篇標ID</h5>
+<div id="id" class="section level3">
+<h3>對每篇標ID</h3>
 <pre class="r"><code>words %&gt;% mutate(id = 1:n()) -&gt; doc</code></pre>
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <thead>
@@ -288,28 +288,28 @@ PC品牌大廠宏碁(2353)轉型有成，利多頻傳，其伺服器Altos再傳�
 </table>
 <p><br></p>
 </div>
-<div id="section-2" class="section level5">
-<h5>讀取財經詞庫與理財用詞詞庫，來源自搜狗詞庫</h5>
+<div id="section-2" class="section level3">
+<h3>讀取財經詞庫與理財用詞詞庫，來源自搜狗詞庫</h3>
 <pre class="r"><code>f&lt;-readLines(&#39;tfidf/financial word.txt&#39;,encoding = &quot;UTF-8&quot;)
 q&lt;-readLines(&#39;tfidf/理財_0402.txt&#39;,encoding = &quot;UTF-8&quot;)
 load(&quot;tfidf/股票公司名稱.RData&quot;)</code></pre>
 <p><br></p>
 </div>
-<div id="section-3" class="section level5">
-<h5>詞庫原本為簡體字，所以需要轉成繁體</h5>
+<div id="section-3" class="section level3">
+<h3>詞庫原本為簡體字，所以需要轉成繁體</h3>
 <pre class="r"><code>f1 &lt;- toTrad(f)
 q1 &lt;- toTrad(q)
 head(q1)</code></pre>
 <pre><code>[1] &quot;&lt;U+FEFF&gt;超買&quot; &quot;超賣&quot;   &quot;底部&quot;   &quot;低價區&quot; &quot;跌破&quot;   &quot;跌勢&quot;  </code></pre>
 <p><br></p>
 </div>
-<div id="section-4" class="section level5">
-<h5>初始化斷詞引擎</h5>
+<div id="section-4" class="section level3">
+<h3>初始化斷詞引擎</h3>
 <pre class="r"><code>jieba_tokenizer &lt;- worker(stop_word = &quot;tfidf/stop2.txt&quot;)</code></pre>
 <p><br></p>
 </div>
-<div id="jieba" class="section level5">
-<h5>jieba詞庫新增</h5>
+<div id="jieba" class="section level3">
+<h3>jieba詞庫新增</h3>
 <pre class="r"><code>new_user_word(jieba_tokenizer, f1) #財經用詞詞庫</code></pre>
 <pre><code>[1] TRUE</code></pre>
 <pre class="r"><code>new_user_word(jieba_tokenizer, q1) #理財用詞詞庫</code></pre>
@@ -318,8 +318,8 @@ head(q1)</code></pre>
 <pre><code>[1] TRUE</code></pre>
 <p><br></p>
 </div>
-<div id="section-5" class="section level5">
-<h5>自定義斷詞函式</h5>
+<div id="section-5" class="section level3">
+<h3>自定義斷詞函式</h3>
 <pre class="r"><code>tokenizer_fun &lt;- function(t) {
   lapply(t, function(x) {
     tokens &lt;- segment(x, jieba_tokenizer)              #斷詞
@@ -331,8 +331,8 @@ head(q1)</code></pre>
 }</code></pre>
 <p><br></p>
 </div>
-<div id="unnest_tokens" class="section level5">
-<h5>使用unnest_tokens以及自定義函式斷詞與計算詞頻</h5>
+<div id="unnest_tokens" class="section level3">
+<h3>使用unnest_tokens以及自定義函式斷詞與計算詞頻</h3>
 <pre class="r"><code>fq_table &lt;- doc %&gt;% 
 unnest_tokens(word, text, token=tokenizer_fun) %&gt;% 
   na.omit()%&gt;%count(id,word)
@@ -467,8 +467,8 @@ n
 </table>
 <p><br></p>
 </div>
-<div id="bind_tf_idftfidf-tf-idf" class="section level5">
-<h5>使用bind_tf_idf計算Tf、Idf以及 Tf-idf</h5>
+<div id="bind_tf_idftfidf-tf-idf" class="section level3">
+<h3>使用bind_tf_idf計算Tf、Idf以及 Tf-idf</h3>
 <pre class="r"><code>tf_idf_table &lt;- fq_table  %&gt;% bind_tf_idf(term = word,document = id,n = n)
 tf_idf_table[1:10,] %&gt;%  kable() %&gt;% kable_styling() #第一個文本10個詞</code></pre>
 <table class="table" style="margin-left: auto; margin-right: auto;">
@@ -699,14 +699,14 @@ tf_idf
 </table>
 <p><br></p>
 </div>
-<div id="section-6" class="section level5">
-<h5>刪除一些沒有用的詞</h5>
+<div id="section-6" class="section level3">
+<h3>刪除一些沒有用的詞</h3>
 <pre class="r"><code>mystopwords &lt;- tibble(word = c(&quot;乃因&quot;,&quot;之故&quot;,&quot;行已&quot;,&quot;數上&quot;,&quot;比則&quot;))
 tf_idf_table2  &lt;- anti_join(tf_idf_table , mystopwords, by = &quot;word&quot;)</code></pre>
 <p><br></p>
 </div>
-<div id="section-7" class="section level5">
-<h5>每個文本前10重要的詞</h5>
+<div id="section-7" class="section level3">
+<h3>每個文本前10重要的詞</h3>
 <pre class="r"><code>top10 &lt;- tf_idf_table2 %&gt;% group_by(id) %&gt;%  top_n(10,tf_idf)  %&gt;% arrange(id,desc(tf_idf))
 
 top10_10 &lt;- NULL
@@ -1080,8 +1080,8 @@ word9
 </table>
 <p><br></p>
 </div>
-<div id="section-8" class="section level5">
-<h5>視覺化前六個文本的前10關鍵詞</h5>
+<div id="section-8" class="section level3">
+<h3>視覺化前六個文本的前10關鍵詞</h3>
 <pre class="r"><code>tf_idf_table2 %&gt;%
   filter(id&lt;7) %&gt;% 
   arrange(desc(tf_idf)) %&gt;%
@@ -1098,8 +1098,8 @@ word9
 <p><img src="/post/TF_Idf_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
 <p><br></p>
 </div>
-<div id="tf--dtm-" class="section level5">
-<h5>轉成一般 TF 為主的 dtm 矩陣</h5>
+<div id="tf--dtm-" class="section level3">
+<h3>轉成一般 TF 為主的 dtm 矩陣</h3>
 <pre class="r"><code>dtm_tf = cast_dtm(tf_idf_table2,id, word, n)
 dim(dtm_tf)</code></pre>
 <pre><code>[1]   793 14167</code></pre>
@@ -1124,8 +1124,8 @@ Docs 人工智慧 下滑 大型 大會 大廠 工業 不降反升 之際 今年 
   9         0    1    0    0    0    0        0    0    0    1</code></pre>
 <p><br></p>
 </div>
-<div id="tf-idf-dtm-" class="section level5">
-<h5>轉成 TF-IDF dtm 矩陣</h5>
+<div id="tf-idf-dtm-" class="section level3">
+<h3>轉成 TF-IDF dtm 矩陣</h3>
 <pre class="r"><code>dtm_tfidf = cast_dtm(tf_idf_table2,id, word, tf_idf)
 dim(dtm_tfidf)</code></pre>
 <pre><code>[1]   793 14167</code></pre>
@@ -1162,8 +1162,8 @@ Docs      今年      公司
   9  0.0000000 0.0086550</code></pre>
 <p><br></p>
 </div>
-<div id="section-9" class="section level5">
-<h5>餘弦相似性</h5>
+<div id="section-9" class="section level3">
+<h3>餘弦相似性</h3>
 <pre class="r"><code>TF &lt;- as.matrix(dtm_tfidf)
 cosineDist &lt;- function(x){
   return(x%*%t(x)/(sqrt(rowSums(x^2) %*% t(rowSums(x^2))))) 
@@ -1171,22 +1171,22 @@ cosineDist &lt;- function(x){
 cosSimilar &lt;- cosineDist(TF)</code></pre>
 <p><br></p>
 </div>
-<div id="section-10" class="section level5">
-<h5>抓跟文本最相似的前五名</h5>
+<div id="section-10" class="section level3">
+<h3>抓跟文本最相似的前五名</h3>
 <pre class="r"><code>resultIndex &lt;- apply(cosSimilar, 2, function(col) {
   return(order(col, decreasing=TRUE)[2:6]);
 })</code></pre>
 <p><br></p>
 </div>
-<div id="section-11" class="section level5">
-<h5>抓自己以及跟文本最相似的前五名</h5>
+<div id="section-11" class="section level3">
+<h3>抓自己以及跟文本最相似的前五名</h3>
 <pre class="r"><code>resultName &lt;- apply(cosSimilar, 2, function(col) {
   return(names(col)[order(col, decreasing=TRUE)[1:6]]);
 })</code></pre>
 <p><br></p>
 </div>
-<div id="section-12" class="section level5">
-<h5>以第一個文本為例子</h5>
+<div id="section-12" class="section level3">
+<h3>以第一個文本為例子</h3>
 <pre class="r"><code>doc %&gt;% 
   filter(id%in%resultName[,1])%&gt;%  kable() %&gt;% kable_styling()</code></pre>
 <table class="table" style="margin-left: auto; margin-right: auto;">

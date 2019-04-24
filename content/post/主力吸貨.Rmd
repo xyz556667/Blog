@@ -18,20 +18,38 @@ par(cex=0.8)
 options(scipen=20, digits=5, width=80)
 if(!require(pacman)) install.packages("pacman")
 ```
+
+<p class="qiz">
+<span style="font-size:24px">`r "\U1F393"`<font face="微軟正黑體">
+ 前言</font>
+</span><br>
+</p class="qiz">
+
+本文藉由技術分析中的主力吸貨策略，進行2008年到2018年股票及ETF的交易回測，資料獲取至台灣經濟新報(TEJ)資料庫，使用軟體為R
+
+![](https://i.imgur.com/FxNyvSi.jpg)
+<br>
+*主力吸貨為技術分析中，K線圖的一種型態，由一根黑K棒緊接著一根紅K棒，  
+漲勢的情況可能發生，所以可以進場*
+
+### 載入必要套件
 ```{r message=FALSE, warning=FALSE}
 library(pacman)
-p_load(tidyverse,magrittr,quantmod)
+p_load(tidyverse,magrittr,quantmod,kableExtra)
 ```
-
+### 讀取股票資料
 ```{r  message=FALSE, warning=FALSE}
 
-load("主力/adjStockPriceData.RData")
+load("主力/adjStockPriceData.RData") #2008年到2018年股票資料
 colnames(adjStockPriceData)<-c("code","name","date","open","high","low","close","volume","mktvalue")
+adjStockPriceData[1:5,]%>% kable()%>% kable_styling() #前五
 code_list<-unique(adjStockPriceData$code)
-
+length(code_list) #2481檔
 ```
 
 ### 5日均量要9成要大於500張
+
+#### 篩選有足夠交易量的股票，以防選到突然爆量的股票波動性過大，不適合投資
 ```{r  message=FALSE, warning=FALSE}
 vol_require<-500
 require_ratio<-0.9
@@ -94,7 +112,8 @@ tradeTargetTable <- adjStockPriceData %>%
 ### 整理出場位置
 ```{r  message=FALSE, warning=FALSE}
 outSiteTable <- adjStockPriceData %>%
-  mutate(outSite=ifelse((close<MA20)&(dplyr::lag(close,1)>dplyr::lag(MA20,1)),1,0)) %>%#出場位置為收盤價跌破MA20
+  mutate(outSite=ifelse((close<MA20)&(dplyr::lag(close,1)>dplyr::lag(MA20,1)),1,0)) %>%
+  #出場位置為收盤價跌破MA20
   dplyr::filter(outSite==1,
                 lagClose1>lagOpen1,              # 第t-1天的收盤價<第t-1天的開盤價(黑K)
                 close<open,                      # 第t天的收盤價>第t天的開盤價(紅K)

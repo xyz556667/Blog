@@ -1,9 +1,11 @@
 html, body {
     height: 100%;
+    font-family: impact;
 }
 
 body {
     font-size:1.5em;
+    font-family: “Russo One”, “Arial Black”, “Hiragino Sans GB”, “Microsoft YaHei”, sans-serif;
     padding-top: 55px;
     display: flex;
     text-align: center;
@@ -12,7 +14,8 @@ body {
 
 main {
     margin: auto;
-    padding: 25px;
+    font-family:"MV Boli", Microsoft JhengHei ;
+    padding: 30px;
     flex: auto;
     max-width: 750px;
 }
