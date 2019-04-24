@@ -14,7 +14,7 @@ body {
 
 main {
     margin: auto;
-    font-family:"MV Boli", Microsoft JhengHei ;
+    font-family:'Lucida Sans Unicode', Microsoft JhengHei ;
     padding: 30px;
     flex: auto;
     max-width: 750px;
