@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en-us">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>R語言課程 UNIT10B：期中專案(OLIST)資料探索</title>
+        <style>
+
+    html body {
+        font-family: 'Mina', sans-serif;
+        background-color: #ededed;
+    }
+
+    :root {
+        --accent: #295477;
+        --border-width:  0 ;
+    }
+
+</style>
+
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Mina">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=VT323">
+
+
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/lakeside-light.min.css"> 
+
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.0/css/all.css" integrity="sha384-Mmxa0mLqhmOeaE8vgOSbKacftZcsNYDjQzuCOm6D02luYSzBG8vpaOykv9lFQ51Y" crossorigin="anonymous">
+
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+
+ 
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/r.min.js"></script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/bash.min.js"></script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/go.min.js"></script>
+    
+
+    <script>hljs.initHighlightingOnLoad();</script>
+
+
+
+
+
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+
+<link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+
+
+<script>$(document).on('click', function() { $('.collapse').collapse('hide'); })</script>
+
+
+<script>
+$(document).ready(function(){
+    
+  var input = $('#night-mode-toggle');
+  var container = $('#bigbody');
+  var stat = $('#button-status');
+  
+  container.toggleClass(localStorage.toggled);
+  stat.bootstrapToggle(localStorage.button).change();
+  
+  input.on('click', function() {
+      if (localStorage.toggled != "-nightmode" ) {
+          container.toggleClass("-nightmode", true );
+          localStorage.toggled = "-nightmode";
+          localStorage.button = "on";
+       } else {
+          container.toggleClass("-nightmode", false );
+          localStorage.toggled = "";
+          localStorage.button = "off"
+       }
+  })
+});
+</script>
+ <meta name="generator" content="Hugo 0.55.2" />
+        
+        
+
+    
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/img/favicon/site.webmanifest">
+    <link rel="mask-icon" href="/img/favicon/safari-pinned-tab.svg" color="#000000">
+    <link rel="shortcut icon" href="/img/favicon/favicon.ico">
+    <meta name="msapplication-TileColor" content="#2b5797">
+    <meta name="msapplication-config" content="/img/favicon/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
+    
+    
+    
+    <meta property="og:title" content="R語言課程 UNIT10B：期中專案(OLIST)資料探索">
+    <meta property="og:type" content="article">
+      
+      <meta name="twitter:card" content="summary">
+      <meta name="twitter:image" content="/icon02.png" >
+      
+    <meta property="description" content="">
+    <meta property="og:description" content="">
+    
+    <meta name="twitter:creator" content="">
+    <meta name="twitter:site" content="">
+    
+    </head>
+
+    
+    
+    <script type="text/javascript" async
+      src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    </script>
+    
+
+    <body id = "bigbody">
+        <nav class="navbar navbar-default navbar-fixed-top">
+            <div class="container">
+                <div class="navbar-header">
+                    <a class="navbar-brand visible-xs" href="#">R語言課程 UNIT10B：期中專案(OLIST)資料探索</a>
+                    <button class="navbar-toggle" data-target=".navbar-collapse" data-toggle="collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                </div>
+                <div class="collapse navbar-collapse">
+                    
+                        <ul class="nav navbar-nav">
+                            
+                                <li><a href="/">Home</a></li>
+                            
+                                <li><a href="/post/">Posts</a></li>
+                            
+                                <li><a href="/tags/">Tags</a></li>
+                            
+                        </ul>
+                    
+                    
+                        <ul class="nav navbar-nav navbar-right">
+                            
+                                <li class="navbar-icon"><a href="mailto:xyz556667@gmail.com"><i class="far fa-envelope"></i></a></li>
+                            
+                                <li class="navbar-icon"><a href="https://github.com/xyz556667"><i class="fab fa-github"></i></a></li>
+                            
+                                <li class="navbar-icon"><a href="https://www.linkedin.com/in/jimmy-chang-890943141/"><i class="fab fa-linkedin"></i></a></li>
+                            
+                            <li id="night-mode-toggle">
+    <input type="checkbox" id = "button-status"
+        data-toggle="toggle"
+        data-width = "10"
+        data-height = "1"
+        data-on="<i class='far fa-moon fa-lg'></i>"
+        data-off= "<i class='far fa-sun fa-lg'></i>"
+        data-style="ios"
+        data-onstyle = "default">
+</li>
+                        </ul>
+                    
+                </div>
+            </div>
+        </nav>
+
+
+<main>
+
+    <div class="item">
+
+    
+    
+    
+
+    
+    
+      
+    
+
+    <h4><a href="/2019/04/24/r%E8%AA%9E%E8%A8%80%E8%AA%B2%E7%A8%8B-unit10b%E6%9C%9F%E4%B8%AD%E5%B0%88%E6%A1%88olist%E8%B3%87%E6%96%99%E6%8E%A2%E7%B4%A2/">R語言課程 UNIT10B：期中專案(OLIST)資料探索</a></h4>
+    <h5>April 24, 2019 - 6 minutes</h5>
+    <h5></h5>
+
+    
+    
+    <a href="/tags/r">
+        <kbd class="item-tag"> R </kbd>
+    </a>
+    
+
+</div>
+
+
+    <br> <div class="text-justify">
+<script src="/rmarkdown-libs/htmlwidgets/htmlwidgets.js"></script>
+<script src="/rmarkdown-libs/d3/./d3.min.js"></script>
+<link href="/rmarkdown-libs/d3heatmapcore/heatmapcore.css" rel="stylesheet" />
+<script src="/rmarkdown-libs/d3heatmapcore/heatmapcore.js"></script>
+<script src="/rmarkdown-libs/d3-tip/index.js"></script>
+<script src="/rmarkdown-libs/d3heatmap-binding/d3heatmap.js"></script>
+
+
+<hr>
+<p><strong>單元摘要：</strong> 期中專案(OLIST)資料探索
+<br><br></p>
+<pre class="r"><code>pacman::p_load(dplyr, MASS, dendextend, vegan, randomcoloR, googleVis, d3heatmap)</code></pre>
+<p><span style="font-size:24px">💡</span>
+請注意資料是放在上星期的資料夾裡面<br></p>
+<pre class="r"><code>load(&quot;unit10/data/olist.RData&quot;)
+load(&quot;unit10/data/Z.RData&quot;)</code></pre>
+<p><br><br></p>
+<div id="a" class="section level3">
+<h3>【A】利用集群分析與尺度縮減的應用：產品(大項)分類</h3>
+<div id="a1.-pull-product_category_name_english-into-p" class="section level5">
+<h5>A1. Pull <code>product_category_name_english</code> into <code>P</code></h5>
+<pre class="r"><code>P = left_join(P, TPC) %&gt;% rename(category = product_category_name_english)</code></pre>
+<pre><code>Joining, by = &quot;product_category_name&quot;</code></pre>
+</div>
+<div id="a2.-merge-category-into-i" class="section level5">
+<h5>A2. Merge <code>category</code> into <code>I</code></h5>
+<pre class="r"><code>I = left_join(I, P[,c(1:10)])</code></pre>
+<pre><code>Joining, by = &quot;product_id&quot;</code></pre>
+</div>
+<div id="a3.-make-a-category_seller-binary-matrix-mx" class="section level5">
+<h5>A3. Make a Category_Seller Binary Matrix: <code>mx</code></h5>
+<pre class="r"><code>mx = xtabs(~ category + seller_id, I) &gt; 0
+dim(mx)</code></pre>
+<pre><code>[1]   71 3033</code></pre>
+</div>
+<div id="a4.-do-clusteing-on-categories" class="section level5">
+<h5>A4. Do Clusteing on Categories</h5>
+<pre class="r"><code>dx= dist(mx, &quot;binary&quot;)
+hcx = hclust(dx, method=&quot;ward.D2&quot;)
+par(mar=c(3,3,1,15), cex=0.8)
+dend = as.dendrogram(hcx)  # horizontal dendrogram
+plot(dend,horiz=T)</code></pre>
+<p><img src="/post/unit10B_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+</div>
+<div id="a5.-cut-tree-and-make-a-nice-dendrogram" class="section level5">
+<h5>A5. Cut tree and make a nice dendrogram</h5>
+<pre class="r"><code>k = 14; cols = distinctColorPalette(k)
+kg=cutree(hcx, k)
+dend %&gt;% color_branches(k, col=cols) %&gt;% color_labels(k) %&gt;% plot(horiz=TRUE)
+dend %&gt;% rect.dendrogram(k, horiz=TRUE, border=&quot;#C0C0C040&quot;, col=&#39;#C0C0C040&#39;)</code></pre>
+<p><img src="/post/unit10B_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<pre class="r"><code># abline(v=heights_per_k.dendrogram(dend)[as.character(k)]-0.03, lty=2, col=&quot;blue&quot;)</code></pre>
+</div>
+<div id="a6.-dimension-reduction-by-mds---multi-dimension-scaling" class="section level5">
+<h5>A6. Dimension Reduction by MDS - Multi-Dimension Scaling</h5>
+<pre class="r"><code># There are many knids of MDS
+# mdx = cmdscale(dx, eig=T)  # classical MDS
+# mdx = isoMDS(dx)           # iso MDS
+mdx = metaMDS(dx, k=2)       # Nonmetric MDS</code></pre>
+<pre><code>Run 0 stress 0.17852 
+Run 1 stress 0.18327 
+Run 2 stress 0.1812 
+Run 3 stress 0.17354 
+... New best solution
+... Procrustes: rmse 0.087911  max resid 0.27229 
+Run 4 stress 0.18225 
+Run 5 stress 0.17312 
+... New best solution
+... Procrustes: rmse 0.083137  max resid 0.31959 
+Run 6 stress 0.17906 
+Run 7 stress 0.18502 
+Run 8 stress 0.18194 
+Run 9 stress 0.18379 
+Run 10 stress 0.17638 
+Run 11 stress 0.18458 
+Run 12 stress 0.1817 
+Run 13 stress 0.17416 
+Run 14 stress 0.17198 
+... New best solution
+... Procrustes: rmse 0.067218  max resid 0.31737 
+Run 15 stress 0.18116 
+Run 16 stress 0.17545 
+Run 17 stress 0.17871 
+Run 18 stress 0.17825 
+Run 19 stress 0.18149 
+Run 20 stress 0.16894 
+... New best solution
+... Procrustes: rmse 0.068018  max resid 0.32656 
+*** No convergence -- monoMDS stopping criteria:
+     3: no. of iterations &gt;= maxit
+    17: stress ratio &gt; sratmax</code></pre>
+</div>
+<div id="a7.-plot-the-result-as-a-word-cloud" class="section level5">
+<h5>A7. Plot the Result as a Word Cloud</h5>
+<pre class="r"><code>x = mdx$points[,1]; y = mdx$points[,2] 
+par(mar=c(4,4,4,2), cex=0.65)
+plot(x, y, xlab=&quot;Dim1&quot;, ylab=&quot;Dim2&quot;, main=&quot;MDS&quot;, type=&quot;n&quot;)
+text(x, y, labels=row.names(mx), font=2, col=cols[kg])</code></pre>
+<p><img src="/post/unit10B_files/figure-html/unnamed-chunk-10-1.png" width="768" /></p>
+<p><br></p>
+<p><span style="font-size:24px">💡</span>
+程式語言可以幫助我們整理資料之外，也可以幫助我們連接各種不同的分析方法，某一些方法只有在與其他方法一起使用的時候，才能發揮它最大的效用。</p>
+<br><br>
+<hr>
+</div>
+</div>
+<div id="b" class="section level3">
+<h3>【B】靜態與動態泡泡圖，品類之間的比較</h3>
+<div id="b1.-category" class="section level5">
+<h5>B1. 對品類(<code>category</code>)做彙總</h5>
+<pre class="r"><code>category = filter(I, !is.na(category)) %&gt;% 
+  group_by(category) %&gt;% summarise(
+    itemsSold = n(),
+    totalRev = sum(price),
+    avgPrice = mean(price),
+    noProduct = n_distinct(product_id),
+    noSeller = n_distinct(seller_id),
+    dummy = 2018
+  ) %&gt;% arrange(desc(totalRev))</code></pre>
+</div>
+<div id="b2.-20" class="section level5">
+<h5>B2. 總營收最大的20個品類</h5>
+<pre class="r"><code>top20 = category$category[1:20]
+category[1:20,]</code></pre>
+<pre><code># A tibble: 20 x 7
+   category              itemsSold totalRev avgPrice noProduct noSeller dummy
+   &lt;chr&gt;                     &lt;int&gt;    &lt;dbl&gt;    &lt;dbl&gt;     &lt;int&gt;    &lt;int&gt; &lt;dbl&gt;
+ 1 health_beauty              9670 1258681.    130.       2444      492  2018
+ 2 watches_gifts              5991 1205006.    201.       1329      101  2018
+ 3 bed_bath_table            11115 1036989.     93.3      3029      196  2018
+ 4 sports_leisure             8641  988049.    114.       2867      481  2018
+ 5 computers_accessories      7827  911954.    117.       1639      287  2018
+ 6 furniture_decor            8334  729762.     87.6      2657      370  2018
+ 7 cool_stuff                 3796  635291.    167.        789      267  2018
+ 8 housewares                 6964  632249.     90.8      2335      468  2018
+ 9 auto                       4235  592720.    140.       1900      383  2018
+10 garden_tools               4347  485256.    112.        753      237  2018
+11 toys                       4117  483947.    118.       1411      252  2018
+12 baby                       3065  411765.    134.        919      244  2018
+13 perfumery                  3419  399125.    117.        868      175  2018
+14 telephony                  4545  323668.     71.2      1134      149  2018
+15 office_furniture           1691  273961.    162.        309       34  2018
+16 stationery                 2517  230943.     91.8       849      173  2018
+17 computers                   203  222963.   1098.         30        9  2018
+18 pet_shop                   1947  214315.    110.        719      137  2018
+19 musical_instruments         680  191499.    282.        289       70  2018
+20 small_appliances            679  190649.    281.        231      105  2018</code></pre>
+</div>
+<div id="b3.-" class="section level5">
+<h5>B3. 靜態泡泡圖</h5>
+<pre class="r"><code>op = options(gvis.plot.tag=&#39;chart&#39;)
+plot( gvisMotionChart(
+  category, &quot;category&quot;, &quot;dummy&quot;, 
+  options=list(width=800, height=600) ))</code></pre>
+</div>
+<div id="b4.-categoryquarter" class="section level5">
+<h5>B4. 對品類(<code>category</code>)和季別(<code>quarter</code>)做彙總</h5>
+<pre class="r"><code>X = left_join(O[, c(1,4)], R[,2:3]) %&gt;%     # pull score &amp; timestamp into &#39;O&#39;
+  rename(
+    time = order_purchase_timestamp, 
+    score = review_score) %&gt;% 
+  mutate(                                   # cut timestamp into quarter    
+    quarter = as.Date(cut(time, &quot;quarter&quot;))
+    ) %&gt;%  
+  right_join(I) %&gt;%                         # merge score &amp; quarter into &#39;I&#39;
+  filter(category %in% top20) %&gt;%           # pick out the top20 categories
+  group_by(category, quarter) %&gt;% 
+  summarise(                            # summarise by category &amp; quarter
+    itemsSold = n(),                     
+    totalRev = sum(price),
+    avgPrice = mean(price),
+    avgScore = mean(score),
+    noProduct = n_distinct(product_id),
+    noSeller = n_distinct(seller_id)
+  ) %&gt;% 
+  arrange(category, quarter)            # order by category &amp; quarter</code></pre>
+<pre><code>Joining, by = &quot;order_id&quot;
+Joining, by = &quot;order_id&quot;</code></pre>
+</div>
+<div id="b5.-some-adjustment-before-ploting" class="section level5">
+<h5>B5. Some Adjustment before Ploting</h5>
+<pre class="r"><code>X2 = X %&gt;% 
+  filter(quarter &gt;= as.Date(&quot;2017-04-01&quot;)) %&gt;% 
+  filter(!(category %in% c(&quot;computers&quot;, &quot;office_furniture&quot;))) %&gt;% 
+  mutate(Score = pmax(avgScore, 3)) %&gt;% as.data.frame</code></pre>
+</div>
+<div id="b6.-" class="section level5">
+<h5>B6. 動態泡泡圖</h5>
+<pre class="r"><code>plot( gvisMotionChart( 
+  X2, &quot;category&quot;, &quot;quarter&quot;, 
+  options=list(width=800, height=600) ))</code></pre>
+<p><br></p>
+<p><span style="font-size:24px">💡</span>
+動態泡泡圖不但可以讓我們依各種軸度比較研究對象的之間的差異，它也可以幫助我們看到個體與整體的變化趨勢。 <br></p>
+<br><br>
+<hr>
+</div>
+</div>
+<div id="c" class="section level3">
+<h3>【C】產業經濟應用</h3>
+<div id="c1.-" class="section level5">
+<h5>C1. 準備資料</h5>
+<pre class="r"><code>X = filter(I, !is.na(category)) %&gt;% 
+  group_by(category, seller_id) %&gt;%     # cascading groups
+  summarise(revenue = sum(price)) %&gt;%   # drop last grouping
+  arrange(category, desc(revenue)) %&gt;%  # arrange and ...
+  mutate(                               # mutate within cetegory
+    rn = row_number(desc(revenue)),  # rank by revenue
+    share = revenue/sum(revenue),    # market share 
+    c.share = cumsum(share)          # cumm. market share
+  )</code></pre>
+</div>
+<div id="c2.-" class="section level5">
+<h5>C2. 計算產業集中度</h5>
+<pre class="r"><code>category = X %&gt;% group_by(category) %&gt;% 
+  summarise(
+    concentrate = sum(share^2),
+    top3.con = max(c.share[rn &lt;= 3]),
+    top5.con = max(c.share[rn &lt;= 5]),
+    top10.con = max(c.share[rn &lt;= 10])
+  ) %&gt;% 
+  right_join(category) %&gt;% 
+  arrange(desc(concentrate))</code></pre>
+<pre><code>Joining, by = &quot;category&quot;</code></pre>
+<pre class="r"><code>filter(category, totalRev &gt; 100000)[,c(1:4,7,10)]</code></pre>
+<pre><code># A tibble: 26 x 6
+   category            concentrate top3.con top5.con totalRev noSeller
+   &lt;chr&gt;                     &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;int&gt;
+ 1 computers                0.580     0.917    0.968  222963.        9
+ 2 office_furniture         0.423     0.815    0.874  273961.       34
+ 3 home_appliances_2        0.141     0.499    0.583  113318.       46
+ 4 stationery               0.134     0.466    0.536  230943.      173
+ 5 watches_gifts            0.0931    0.467    0.626 1205006.      101
+ 6 luggage_accessories      0.0920    0.430    0.550  140430.       73
+ 7 musical_instruments      0.0916    0.476    0.564  191499.       70
+ 8 consoles_games           0.0832    0.395    0.506  157465.       82
+ 9 perfumery                0.0828    0.446    0.552  399125.      175
+10 garden_tools             0.0709    0.398    0.471  485256.      237
+# ... with 16 more rows</code></pre>
+<br><br>
+<hr>
+</div>
+</div>
+<div id="d" class="section level3">
+<h3>【D】熱圖與集群分析的綜合應用</h3>
+<div id="d1.-" class="section level5">
+<h5>D1. 每一州的顧客比率</h5>
+<pre class="r"><code>table(C$customer_state) %&gt;% 
+  sort(decreasing=T) %&gt;% 
+  prop.table %&gt;% 
+  cumsum</code></pre>
+<pre><code>     SP      RJ      MG      RS      PR      SC      BA      DF      ES      GO 
+0.41981 0.54905 0.66605 0.72102 0.77175 0.80833 0.84232 0.86384 0.88428 0.90460 
+     PE      CE      PA      MT      MA      MS      PB      PI      RN      AL 
+0.92121 0.93464 0.94445 0.95357 0.96108 0.96827 0.97366 0.97864 0.98352 0.98767 
+     SE      TO      RO      AM      AC      AP      RR 
+0.99119 0.99401 0.99655 0.99804 0.99885 0.99954 1.00000 </code></pre>
+</div>
+<div id="d2.-merge-ccustomer_state-into-i-via-o" class="section level5">
+<h5>D2. Merge <code>C$customer_state</code> into <code>I</code> via <code>O</code></h5>
+<pre class="r"><code>I = left_join(O[,1:2], C[,c(1,5)])[-2] %&gt;%   # merge state into `O`
+  right_join(I) %&gt;%                          # then merge to `I`
+  rename(state=customer_state)               # use a shoter name</code></pre>
+<pre><code>Joining, by = &quot;customer_id&quot;</code></pre>
+<pre><code>Joining, by = &quot;order_id&quot;</code></pre>
+</div>
+<div id="d3.-make-a-category_state-matrix" class="section level5">
+<h5>D3. Make a Category_State Matrix</h5>
+<p><code>mx[c,s]</code> is the number of <code>c</code> product items sold to <code>s</code></p>
+<pre class="r"><code>mx = xtabs(~ category + state, I)         # count the no. item sold
+# If we want to use total revenue instead of counts, simply do
+# mx = xtabs(price ~ category + state, I)  </code></pre>
+<pre class="r"><code>dim(mx)  # 71 categories by 27 states</code></pre>
+<pre><code>[1] 71 27</code></pre>
+<p>The data is heavily skewed</p>
+<pre class="r"><code>hist(mx, main=range(mx))</code></pre>
+<p><img src="/post/unit10B_files/figure-html/unnamed-chunk-24-1.png" width="672" /></p>
+<p>use 1+log transformation and reverse color scheme</p>
+<pre class="r"><code>-log(1+mx) %&gt;% as.data.frame.matrix %&gt;% d3heatmap()</code></pre>
+<p>&lt;!-v id="htmlwidget-1" style="width:672px;height:1440px;" class="d3heatmap html-widget"></div>
+<script type="application/json" data-for="htmlwidget-1">{"x":{"rows":{"members":71,"height":25.4839021475338,"edgePar":{"col":""},"children":[{"members":52,"height":15.3535809498231,"edgePar":{"col":""},"children":[{"members":21,"height":7.62743915425747,"edgePar":{"col":""},"children":[{"members":3,"height":3.10568451493903,"edgePar":{"col":""},"children":[{"members":1,"height":0,"label":"security_and_services","edgePar":{"col":""}},{"members":2,"height":2.37820783451057,"edgePar":{"col":""},"children":[{"members":1,"height":0,"label":"fashion_childrens_clothes","edgePar":{"col":""}},{"members":1,"height":0,"label":"cds_dvds_musicals","edgePar":{"col":""}}]}]},{"members":18,"height":5.79754735474337,"edgePar":{"col":""},"children":[{"members":6,"height":4.60941451588434,"edgePar":{"col":""},"children":[{"members":3,"height":3.18580516092939,"edgePar":{"col":""},"children":[{"members":1,"height":0,"label":"dvds_blu_ray","edgePar":{"col":""}},{"members":2,"height":2.56725732585256,"edgePar":{"col":""},"children":[{"members":1,"height":0,"label":"small_appliances_home_oven_and_coffee","edgePar":{"col":""}},{"members":1,"height":0,"label":"furniture_bedroom","edgePar":{"col":""}}]}]},{"members":3,"height":3.61669518090445,"edgePar":{"col":""},"children":[{"members":1,"height":0,"label":"tablets_printing_image","edgePar":{"col":""}},{"members":2,"height":1.96679283598783,"edgePar":{"col":""},"children":[{"members":1,"height":0,"label":"fashion_male_clothing","edgePar":{"col":""}},{"members":1,"height":0,"label":"costruction_tools_tools","edgePar":{"col":""}}]}]}]},{"members":12,"height":4.29905557492548,"edgePar":{"col":""},"children":[{"members":3,"height":2.55084118529299,"edgePar":{"col":""},"children":[{"members":1,"height":0,"label":"cine_photo","edgePar":{"col":""}},{"members":2,"height":2.20490252954413,"edgePar":{"col":""},"children":[{"members":1,"height":0,"label":"fashion_sport","edgePar":{"col":""}},{"members":1,"height":0,"label":"books_imported","edgePar":{"col":""}}]}]},{"members":9,"height":3.65810841703201,"edgePar":{"col":""},"children":[{"members":4,"height":2.84456137345982,"edgePar":{"col":""},"children":[{"members":1,"height":0,"label":"music","edgePar":{"col":""}},{"members":3,"height":2.66328322782469,"edgePar":{"col":""},"children":[{"members":1,"height":0,"label":"furniture_mattress_and_upholstery","edgePar":{"col":""}},{"members":2,"height":2.38853898605508,"edgePar":{"col":""},"children":[{"members":1,"height":0,"label":"diapers_and_hygiene","edgePar":{"col":""}},{"members":1,"height":0,"label":"fashio_female_clothing","edgePar":{"col":""}}]}]}]},{"members":5,"height":3.35117857799079,"edgePar":{"col":""},"children":[{"members":2,"height":2.13362148973943,"edgePar":{"col":""},"children":[{"members":1,"height":0,"label":"arts_and_craftmanship","edgePar":{"col":""}},{"members":1,"height":0,"label":"la_cuisine","edgePar":{"col":""}}]},{"members":3,"height":2.3559986897672,"edgePar":{"col":""},"children":[{"members":1,"height":0,"label":"flowers","edgePar":{"col":""}},{"members":2,"height":2.1518942362242,"edgePar":{"col":""},"children":[{"members":1,"height":0,"label":"home_comfort_2","edgePar":{"col":""}},{"members":1,"height":0,"label":"party_supplies","edgePar":{"col":""}}]}]}]}]}]}]}]},{"members":31,"height":9.28123706100189,"edgePar":{"col":""},"children":[{"members":8,"height":4.89724855218993,"edgePar":{"col":""},"children":[{"members":3,"height":3.63481495262709,"edgePar":{"col":""},"children":[{"members":1,"height":0,"label":"books_general_interest","edgePar":{"col":""}},{"members":2,"height":3.39880418749169,"edgePar":{"col":""},"children":[{"members":1,"height":0,"label":"small_appliances","edgePar":{"col":""}},{"members":1,"height":0,"label":"construction_tools_construction","edgePar":{"col":""}}]}]},{"members":5,"height":3.76923388978722,"edgePar":{"col":""},"children":[{"members":2,"height":2.5130191408635,"edgePar":{"col":""},"children":[{"members":1,"height":0,"label":"luggage_accessories","edgePar":{"col":""}},{"members":1,"height":0,"label":"consoles_games","edgePar":{"col":""}}]},{"members":3,"height":2.93296080014518,"edgePar":{"col":""},"children":[{"members":1,"height":0,"label":"home_construction","edgePar":{"col":""}},{"members":2,"height":2.73690029232668,"edgePar":{"col":""},"children":[{"members":1,"height":0,"label":"home_appliances","edgePar":{"col":""}},{"members":1,"height":0,"label":"musical_instruments","edgePar":{"col":""}}]}]}]}]},{"members":23,"height":5.49456564819908,"edgePar":{"col":""},"children":[{"members":8,"height":4.60125062880192,"edgePar":{"col":""},"children":[{"members":2,"height":3.39145319927815,"edgePar":{"col":""},"children":[{"members":1,"height":0,"label":"fixed_telephony","edgePar":{"col":""}},{"members":1,"height":0,"label":"computers","edgePar":{"col":""}}]},{"members":6,"height":4.01166402943854,"edgePar":{"col":""},"children":[{"members":2,"height":2.98500848828259,"edgePar":{"col":""},"children":[{"members":1,"height":0,"label":"fashion_shoes","edgePar":{"col":""}},{"members":1,"height":0,"label":"market_place","edgePar":{"col":""}}]},{"members":4,"height":3.27659012976248,"edgePar":{"col":""},"children":[{"members":1,"height":0,"label":"food","edgePar":{"col":""}},{"members":3,"height":2.76058301850694,"edgePar":{"col":""},"children":[{"members":1,"height":0,"label":"furniture_living_room","edgePar":{"col":""}},{"members":2,"height":2.19661488514038,"edgePar":{"col":""},"children":[{"members":1,"height":0,"label":"home_confort","edgePar":{"col":""}},{"members":1,"height":0,"label":"audio","edgePar":{"col":""}}]}]}]}]}]},{"members":15,"height":4.87993655972154,"edgePar":{"col":""},"children":[{"members":6,"height":4.52618621711356,"edgePar":{"col":""},"children":[{"members":2,"height":3.65613541399427,"edgePar":{"col":""},"children":[{"members":1,"height":0,"label":"construction_tools_safety","edgePar":{"col":""}},{"members":1,"height":0,"label":"agro_industry_and_commerce","edgePar":{"col":""}}]},{"members":4,"height":3.78066995075063,"edgePar":{"col":""},"children":[{"members":1,"height":0,"label":"signaling_and_security","edgePar":{"col":""}},{"members":3,"height":3.06617098536687,"edgePar":{"col":""},"children":[{"members":1,"height":0,"label":"art","edgePar":{"col":""}},{"members":2,"height":2.70776487861514,"edgePar":{"col":""},"children":[{"members":1,"height":0,"label":"fashion_underwear_beach","edgePar":{"col":""}},{"members":1,"height":0,"label":"christmas_supplies","edgePar":{"col":""}}]}]}]}]},{"members":9,"height":4.24311597602827,"edgePar":{"col":""},"children":[{"members":2,"height":3.31339300124686,"edgePar":{"col":""},"children":[{"members":1,"height":0,"label":"food_drink","edgePar":{"col":""}},{"members":1,"height":0,"label":"costruction_tools_garden","edgePar":{"col":""}}]},{"members":7,"height":3.80167436600491,"edgePar":{"col":""},"children":[{"members":3,"height":3.33156539956743,"edgePar":{"col":""},"children":[{"members":1,"height":0,"label":"drinks","edgePar":{"col":""}},{"members":2,"height":2.18395812737389,"edgePar":{"col":""},"children":[{"members":1,"height":0,"label":"construction_tools_lights","edgePar":{"col":""}},{"members":1,"height":0,"label":"books_technical","edgePar":{"col":""}}]}]},{"members":4,"height":3.33733692755623,"edgePar":{"col":""},"children":[{"members":2,"height":2.93294825202173,"edgePar":{"col":""},"children":[{"members":1,"height":0,"label":"kitchen_dining_laundry_garden_furniture","edgePar":{"col":""}},{"members":1,"height":0,"label":"air_conditioning","edgePar":{"col":""}}]},{"members":2,"height":2.78292998037792,"edgePar":{"col":""},"children":[{"members":1,"height":0,"label":"home_appliances_2","edgePar":{"col":""}},{"members":1,"height":0,"label":"industry_commerce_and_business","edgePar":{"col":""}}]}]}]}]}]}]}]}]},{"members":19,"height":9.81635658534462,"edgePar":{"col":""},"children":[{"members":7,"height":3.27212315576497,"edgePar":{"col":""},"children":[{"members":3,"height":1.90353766759072,"edgePar":{"col":""},"children":[{"members":1,"height":0,"label":"health_beauty","edgePar":{"col":""}},{"members":2,"height":1.12690387486626,"edgePar":{"col":""},"children":[{"members":1,"height":0,"label":"computers_accessories","edgePar":{"col":""}},{"members":1,"height":0,"label":"sports_leisure","edgePar":{"col":""}}]}]},{"members":4,"height":3.18188935840169,"edgePar":{"col":""},"children":[{"members":2,"height":1.89198227723576,"edgePar":{"col":""},"children":[{"members":1,"height":0,"label":"telephony","edgePar":{"col":""}},{"members":1,"height":0,"label":"watches_gifts","edgePar":{"col":""}}]},{"members":2,"height":2.12831723739877,"edgePar":{"col":""},"children":[{"members":1,"height":0,"label":"bed_bath_table","edgePar":{"col":""}},{"members":1,"height":0,"label":"furniture_decor","edgePar":{"col":""}}]}]}]},{"members":12,"height":6.36516685937823,"edgePar":{"col":""},"children":[{"members":3,"height":3.06480984369174,"edgePar":{"col":""},"children":[{"members":1,"height":0,"label":"pet_shop","edgePar":{"col":""}},{"members":2,"height":2.55525330993633,"edgePar":{"col":""},"children":[{"members":1,"height":0,"label":"office_furniture","edgePar":{"col":""}},{"members":1,"height":0,"label":"fashion_bags_accessories","edgePar":{"col":""}}]}]},{"members":9,"height":4.09360014719515,"edgePar":{"col":""},"children":[{"members":4,"height":2.67061628411829,"edgePar":{"col":""},"children":[{"members":2,"height":2.3705905960798,"edgePar":{"col":""},"children":[{"members":1,"height":0,"label":"stationery","edgePar":{"col":""}},{"members":1,"height":0,"label":"electronics","edgePar":{"col":""}}]},{"members":2,"height":1.68863010728915,"edgePar":{"col":""},"children":[{"members":1,"height":0,"label":"baby","edgePar":{"col":""}},{"members":1,"height":0,"label":"perfumery","edgePar":{"col":""}}]}]},{"members":5,"height":2.62150189957539,"edgePar":{"col":""},"children":[{"members":1,"height":0,"label":"housewares","edgePar":{"col":""}},{"members":4,"height":2.07402558700506,"edgePar":{"col":""},"children":[{"members":1,"height":0,"label":"toys","edgePar":{"col":""}},{"members":3,"height":1.66748257699937,"edgePar":{"col":""},"children":[{"members":1,"height":0,"label":"auto","edgePar":{"col":""}},{"members":2,"height":1.38635414962298,"edgePar":{"col":""},"children":[{"members":1,"height":0,"label":"cool_stuff","edgePar":{"col":""}},{"members":1,"height":0,"label":"garden_tools","edgePar":{"col":""}}]}]}]}]}]}]}]}]},"cols":{"members":27,"height":42.1625635205832,"edgePar":{"col":""},"children":[{"members":24,"height":26.1615658489874,"edgePar":{"col":""},"children":[{"members":13,"height":15.3928697250473,"edgePar":{"col":""},"children":[{"members":7,"height":8.90968121357264,"edgePar":{"col":""},"children":[{"members":4,"height":6.23160187596177,"edgePar":{"col":""},"children":[{"members":2,"height":5.06589937703771,"edgePar":{"col":""},"children":[{"members":1,"height":0,"label":"RS","edgePar":{"col":""}},{"members":1,"height":0,"label":"PR","edgePar":{"col":""}}]},{"members":2,"height":4.82120089809069,"edgePar":{"col":""},"children":[{"members":1,"height":0,"label":"SC","edgePar":{"col":""}},{"members":1,"height":0,"label":"BA","edgePar":{"col":""}}]}]},{"members":3,"height":5.68164973644488,"edgePar":{"col":""},"children":[{"members":2,"height":5.0249879775895,"edgePar":{"col":""},"children":[{"members":1,"height":0,"label":"GO","edgePar":{"col":""}},{"members":1,"height":0,"label":"ES","edgePar":{"col":""}}]},{"members":1,"height":0,"label":"DF","edgePar":{"col":""}}]}]},{"members":6,"height":7.14610688285563,"edgePar":{"col":""},"children":[{"members":4,"height":6.20609633103966,"edgePar":{"col":""},"children":[{"members":2,"height":4.18023529694699,"edgePar":{"col":""},"children":[{"members":1,"height":0,"label":"PE","edgePar":{"col":""}},{"members":1,"height":0,"label":"CE","edgePar":{"col":""}}]},{"members":2,"height":4.95585543119682,"edgePar":{"col":""},"children":[{"members":1,"height":0,"label":"MT","edgePar":{"col":""}},{"members":1,"height":0,"label":"MS","edgePar":{"col":""}}]}]},{"members":2,"height":4.71785714446157,"edgePar":{"col":""},"children":[{"members":1,"height":0,"label":"PA","edgePar":{"col":""}},{"members":1,"height":0,"label":"MA","edgePar":{"col":""}}]}]}]},{"members":11,"height":11.9583440451194,"edgePar":{"col":""},"children":[{"members":8,"height":7.92260810956755,"edgePar":{"col":""},"children":[{"members":5,"height":5.93114584849268,"edgePar":{"col":""},"children":[{"members":3,"height":4.42417292184911,"edgePar":{"col":""},"children":[{"members":2,"height":3.91532490284515,"edgePar":{"col":""},"children":[{"members":1,"height":0,"label":"AL","edgePar":{"col":""}},{"members":1,"height":0,"label":"TO","edgePar":{"col":""}}]},{"members":1,"height":0,"label":"SE","edgePar":{"col":""}}]},{"members":2,"height":5.12277479235818,"edgePar":{"col":""},"children":[{"members":1,"height":0,"label":"RO","edgePar":{"col":""}},{"members":1,"height":0,"label":"AM","edgePar":{"col":""}}]}]},{"members":3,"height":6.07500346311937,"edgePar":{"col":""},"children":[{"members":2,"height":5.3897966763117,"edgePar":{"col":""},"children":[{"members":1,"height":0,"label":"PB","edgePar":{"col":""}},{"members":1,"height":0,"label":"PI","edgePar":{"col":""}}]},{"members":1,"height":0,"label":"RN","edgePar":{"col":""}}]}]},{"members":3,"height":4.63214361544759,"edgePar":{"col":""},"children":[{"members":2,"height":4.21721022435999,"edgePar":{"col":""},"children":[{"members":1,"height":0,"label":"AC","edgePar":{"col":""}},{"members":1,"height":0,"label":"RR","edgePar":{"col":""}}]},{"members":1,"height":0,"label":"AP","edgePar":{"col":""}}]}]}]},{"members":3,"height":11.7040078905847,"edgePar":{"col":""},"children":[{"members":2,"height":4.41749876099025,"edgePar":{"col":""},"children":[{"members":1,"height":0,"label":"RJ","edgePar":{"col":""}},{"members":1,"height":0,"label":"MG","edgePar":{"col":""}}]},{"members":1,"height":0,"label":"SP","edgePar":{"col":""}}]}]},"matrix":{"data":["0","0","0","0","0","0","-0.693","0","0","0","0","0","0","0","0","0","-0.693","0","0","0","0","0","0","0","0","0","0","0","0","-1.099","-0.693","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","-0.693","0","-1.609","-1.792","0","0","0","0","0","0","0","0","0","0","0","-0.693","0","0","0","0","0","0","0","0","0","0","0","-1.099","0","-1.946","-1.609","-1.792","-1.099","0","-0.693","0","-1.386","-1.099","0","0","-1.386","0","0","-0.693","0","0","-0.693","0","0","-0.693","-0.693","0","0","0","-2.639","-1.609","-3.178","-1.386","-2.197","-1.609","-1.386","0","0","-0.693","-0.693","0","-0.693","-0.693","0","0","0","-0.693","0","-0.693","0","0","0","0","0","0","0","-2.079","-2.398","-3.584","-1.099","-2.303","-1.386","-1.609","-0.693","-0.693","-0.693","-0.693","0","-1.099","-0.693","0","0","0","0","-1.099","0","0","0","0","-1.386","0","0","0","-3.045","-2.079","-3.97","-0.693","-1.386","0","-1.946","-0.693","-1.609","0","-1.099","-0.693","-1.099","-1.099","-1.609","-0.693","0","0","0","0","-0.693","0","-1.386","0","0","0","0","-2.398","-2.398","-3.497","-2.303","-2.565","-1.099","-2.303","-1.386","-1.386","0","0","-0.693","-0.693","0","-1.099","-0.693","0","0","0","0","0","0","0","0","0","0","0","-2.565","-3.045","-4.06","-2.197","-2.197","-1.792","-1.792","-2.079","-1.609","0","-0.693","-0.693","-0.693","-0.693","-0.693","0","0","0","0","0","0","-0.693","0","0","0","0","0","-2.303","-2.944","-3.526","-2.565","-1.099","-1.609","-1.386","-0.693","-0.693","-0.693","-0.693","0","-0.693","0","-1.386","-0.693","0","0","0","0","0","0","0","0","0","0","0","-1.792","-1.946","-3.466","-1.099","-0.693","-1.386","-1.099","0","0","-0.693","0","0","0","0","-1.609","-0.693","0","0","0","0","0","0","0","0","0","0","0","-1.099","-1.099","-2.565","-1.099","-1.099","-0.693","-0.693","0","0","0","0","0","0","0","-1.099","-0.693","0","0","-0.693","0","0","0","0","0","0","0","0","-1.946","-2.079","-3.638","-0.693","-2.079","0","0","-0.693","0","-0.693","0","-0.693","0","0","0","0","0","0","0","0","-0.693","0","0","0","0","0","0","-2.197","-1.946","-2.565","0","0","-1.099","0","-0.693","0","-0.693","0","0","0","0","0","0","0","0","0","0","0","0","0","-0.693","0","0","0","-2.197","-1.386","-3.135","0","-1.099","0","-0.693","0","0","0","0","-0.693","0","0","0","0","0","0","0","0","0","-0.693","0","0","0","0","0","-1.099","-0.693","-3.466","0","-1.099","-0.693","-0.693","-1.099","-0.693","-0.693","0","0","-0.693","0","0","0","0","0","0","0","0","-1.099","0","0","0","0","0","-1.099","-2.079","-3.367","0","0","-0.693","0","0","0","-0.693","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","-1.946","-2.833","-1.386","0","-1.099","0","-0.693","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","-1.099","-1.946","-1.386","0","0","0","-0.693","-1.099","0","-1.099","0","0","-0.693","0","0","0","0","0","0","0","0","0","0","0","0","0","-2.197","-1.792","-2.485","-0.693","-0.693","0","-0.693","-1.792","-0.693","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","-1.609","-1.386","-2.708","-1.609","-1.099","-1.099","0","-1.099","-1.099","-0.693","0","0","0","0","0","0","0","0","0","0","0","0","-0.693","0","0","0","0","-1.946","-1.792","-2.944","-3.367","-3.638","-3.178","-2.773","-2.773","-2.485","-2.944","-2.197","-2.079","-1.099","-1.099","-1.792","-1.386","-1.099","-0.693","-0.693","-0.693","-0.693","-1.792","-0.693","-3.332","-1.099","0","0","-4.06","-4.007","-5.429","-3.829","-3.761","-3.367","-2.944","-2.485","-1.386","-3.178","-1.386","-2.197","-2.197","-1.946","-2.303","-1.099","0","0","-1.386","-0.693","0","-1.609","0","-1.386","-0.693","0","0","-4.489","-4.205","-5.73","-3.807","-3.951","-3.434","-3.611","-2.485","-2.565","-2.485","-2.565","-2.398","-2.079","-2.708","-1.099","-0.693","-1.099","0","-0.693","-1.609","0","-0.693","-0.693","-2.197","0","0","0","-4.812","-4.804","-6.061","-4.043","-3.951","-3.584","-3.497","-2.565","-2.833","-3.219","-2.639","-3.219","-2.197","-2.303","-2.079","-2.303","-1.946","-1.099","-1.386","-1.946","-1.386","-2.079","-1.792","-0.693","-1.099","0","0","-4.82","-5.215","-6.122","-4.127","-3.871","-3.555","-3.611","-3.135","-3.178","-3.367","-3.045","-2.833","-2.303","-1.946","-2.708","-1.946","-2.079","-1.609","-1.946","-0.693","-1.099","-2.079","-2.303","-1.946","-0.693","0","-0.693","-4.963","-4.898","-6.209","-3.784","-3.219","-3.258","-2.708","-2.639","-2.773","-2.079","-2.079","-2.398","-2.079","-2.197","-1.099","-1.792","-1.386","-0.693","-1.386","0","-1.609","-1.792","-1.609","-0.693","0","0","0","-4.29","-4.159","-5.595","-3.807","-3.807","-3.258","-3.689","-2.708","-2.773","-2.773","-1.792","-2.079","-2.197","-1.946","-2.398","-1.386","-1.386","-0.693","-0.693","-1.099","-1.099","-1.099","-1.609","-1.099","0","-1.386","0","-4.431","-4.466","-5.852","-3.497","-3.638","-3.434","-3.689","-2.303","-3.091","-2.398","-2.485","-2.079","-1.946","-2.079","-2.398","-2.398","-0.693","-0.693","-1.386","-0.693","-0.693","-1.609","-1.946","-1.099","-0.693","0","-1.099","-4.394","-4.394","-5.598","-2.996","-1.946","-2.079","-2.565","-1.946","-2.303","-1.386","-1.386","-1.609","0","-0.693","-0.693","-0.693","-1.609","-1.099","-1.099","0","-0.693","-1.792","-1.099","0","0","0","-1.946","-3.611","-2.89","-4.771","-2.197","-1.609","-1.792","-3.258","-1.792","-1.386","-2.079","-2.398","-1.946","-1.099","-0.693","-1.609","-1.792","-1.099","-0.693","-1.099","-1.099","-0.693","-1.609","-1.386","0","-0.693","0","-0.693","-3.178","-2.996","-4.094","-2.398","-2.944","-2.079","-2.079","-2.079","-1.792","-2.079","-2.485","-1.386","-1.386","-1.609","-1.609","-0.693","-1.386","-0.693","0","-0.693","0","-1.099","-0.693","-1.099","-1.099","0","0","-3.401","-3.784","-4.522","-3.091","-2.773","-2.708","-1.609","-2.639","-2.079","-1.609","-1.609","-1.609","-1.792","-1.099","-1.792","-2.303","-1.386","-0.693","-1.386","-0.693","-0.693","-1.386","-1.386","-1.099","-0.693","0","0","-3.611","-3.526","-4.771","-2.639","-3.401","-2.833","-2.944","-2.079","-2.708","-2.303","-2.197","-1.792","-2.079","-1.609","0","0","-0.693","0","-0.693","-0.693","-0.693","-1.386","-0.693","-1.099","0","0","0","-3.871","-3.664","-5.656","-3.219","-2.89","-2.565","-3.045","-2.398","-2.708","-2.079","-1.609","-1.099","-1.386","-1.386","-0.693","-1.609","-1.386","-1.099","-1.386","-0.693","0","-1.386","-1.099","0","-0.693","0","0","-4.771","-3.892","-5.313","-3.091","-2.639","-2.565","-2.485","-2.197","-2.565","-2.079","-2.197","-1.609","-1.609","-0.693","0","-1.099","-0.693","-0.693","-0.693","-0.693","0","-0.693","-1.386","-0.693","0","0","0","-4.127","-4.06","-5.323","-2.833","-2.944","-2.398","-2.708","-2.079","-2.708","-2.833","-1.609","-1.792","-1.609","-0.693","-0.693","-1.386","-1.792","-0.693","0","0","-0.693","-0.693","-1.609","-0.693","0","0","0","-4.078","-3.584","-4.984","-2.197","-2.944","-2.639","-2.079","-2.079","0","-1.386","-1.609","-1.792","-1.609","-1.099","0","0","0","0","-0.693","-0.693","0","-2.197","0","-0.693","0","0","0","-2.89","-3.401","-4.205","-2.303","-2.565","-1.386","-1.792","-2.079","-1.099","0","-1.792","-1.946","-1.099","-1.386","-1.099","-0.693","-0.693","0","0","-1.609","0","-1.099","-1.386","0","0","0","-0.693","-3.367","-3.091","-4.564","-2.89","-1.386","-2.398","-1.946","-1.946","-1.946","-1.609","-1.099","0","-1.946","-0.693","-1.386","0","0","0","-1.099","0","0","-1.946","0","-0.693","0","0","0","-3.045","-2.485","-4.564","-2.303","-2.303","-1.946","-2.398","-1.609","-0.693","-1.946","-0.693","0","-0.693","-0.693","-1.099","0","0","0","0","-1.099","-0.693","-0.693","-1.099","-0.693","0","0","-1.099","-3.526","-2.944","-4.605","-1.386","-1.946","-2.197","-1.946","-1.792","-0.693","-1.099","-1.099","0","-0.693","-1.386","-1.386","0","0","0","0","0","0","0","-0.693","0","0","0","0","-2.89","-2.944","-4.025","-1.946","-1.946","-2.708","-2.398","-1.386","-1.099","-2.197","-1.609","-1.099","-0.693","-1.099","-1.946","-0.693","0","0","0","-1.099","0","0","0","-0.693","-0.693","0","0","-2.773","-2.996","-3.932","-1.946","-2.833","-1.386","-2.197","0","-2.079","-1.609","-1.792","-1.609","0","-0.693","-0.693","-1.099","-0.693","0","-0.693","0","0","0","-0.693","-1.609","0","0","0","-3.97","-3.296","-4.92","-2.079","-1.946","-1.792","-2.197","-1.792","-1.792","-1.792","-1.946","-2.197","0","-1.099","-0.693","0","0","0","0","-1.099","-1.099","-0.693","-1.609","-1.386","0","0","0","-3.689","-3.434","-4.605","-2.944","-2.773","-2.708","-2.485","-2.079","-1.792","-1.792","0","-1.386","-0.693","-1.609","-0.693","0","-0.693","0","0","0","-0.693","0","-0.693","0","0","0","0","-4.025","-3.296","-5.357","-3.219","-2.639","-2.833","-1.946","-1.792","-2.303","-1.609","-1.386","-0.693","-1.386","-2.303","-0.693","-0.693","0","-1.099","-0.693","0","0","0","-0.693","0","0","0","0","-3.091","-3.738","-4.97","-2.565","-2.773","-2.398","-2.398","-1.386","-2.708","-1.792","-1.609","-1.609","-1.792","-1.609","-1.099","-1.386","0","-1.099","0","0","0","0","-1.099","-0.693","0","0","0","-3.401","-3.401","-4.736","-2.639","-2.708","-2.079","-1.386","-1.609","-0.693","-1.792","-1.609","-0.693","-1.386","0","-0.693","0","-1.099","-0.693","0","0","0","-0.693","0","-1.099","0","0","0","-3.871","-3.401","-4.97","-2.773","-2.565","-1.609","-1.946","-2.079","-1.946","-1.386","-1.099","-1.099","-1.792","0","0","-0.693","-0.693","0","0","0","-0.693","-0.693","-1.386","0","0","0","0","-4.248","-3.045","-4.942","-2.565","-2.833","-2.89","-1.946","-1.386","-1.386","-1.792","-1.099","-1.386","-1.386","-1.609","0","0","-1.099","-1.386","-0.693","0","-0.693","0","-0.693","-1.099","0","0","0","-3.829","-3.045","-4.5","-3.178","-2.565","-2.833","-1.792","-2.079","-1.099","-1.946","-1.609","-1.099","-1.386","-0.693","0","-0.693","-0.693","-0.693","-1.386","-0.693","0","-1.386","-1.386","-0.693","0","0","0","-3.367","-2.89","-4.86","-6.08","-6.054","-5.737","-5.861","-5.438","-5.112","-5.509","-5.485","-5.124","-4.511","-4.19","-4.682","-4.5","-4.159","-3.611","-3.714","-3.258","-3.045","-4.369","-4.007","-4.078","-2.079","-2.079","-2.398","-6.971","-6.991","-8.344","-6.186","-5.966","-5.771","-5.561","-4.828","-5.03","-5.1","-4.673","-4.543","-4.025","-4.159","-4.511","-4.304","-3.738","-3.091","-3.611","-3.178","-2.89","-4.007","-3.611","-3.497","-2.303","-1.792","-2.303","-6.911","-6.909","-8.062","-6.165","-6.188","-5.897","-5.684","-5.124","-5.165","-5.416","-5.011","-4.543","-4.344","-4.331","-4.454","-4.205","-3.526","-3.258","-3.584","-3.045","-2.565","-3.611","-3.555","-3.135","-2.303","-2.197","-2.079","-6.949","-6.874","-8.207","-5.68","-5.525","-5.17","-5.525","-4.82","-4.754","-4.554","-4.868","-4.605","-4.205","-3.367","-4.357","-4.19","-3.367","-3.091","-3.367","-2.996","-2.773","-3.332","-3.664","-3.258","-1.792","-1.609","-1.609","-6.084","-6.184","-7.407","-5.455","-5.73","-5.226","-5.455","-4.997","-5.03","-5.004","-5.112","-4.92","-4.127","-3.638","-4.344","-4.127","-3.611","-3.434","-3.045","-2.773","-2.485","-3.784","-3.738","-3.912","-1.609","-0.693","-2.197","-6.774","-6.458","-7.733","-6.422","-6.151","-5.802","-5.576","-5.464","-5.421","-5.347","-4.543","-4.431","-4.263","-4.174","-3.664","-3.611","-3.045","-2.398","-2.773","-2.773","-2.197","-3.497","-3.555","-3.434","-1.609","-1.386","-1.946","-7.405","-7.194","-8.563","-6.332","-6.256","-5.872","-5.533","-4.86","-4.984","-5.03","-4.595","-4.477","-4.331","-4.19","-4.277","-3.892","-3.555","-2.944","-3.258","-2.639","-1.609","-3.761","-3.135","-3.401","-2.565","-1.946","-1.386","-6.995","-6.856","-8.17","-4.605","-4.522","-4.454","-4.143","-3.367","-3.296","-3.714","-3.178","-2.639","-2.833","-3.258","-2.485","-2.398","-1.386","-1.609","-1.386","-2.197","-1.609","-2.197","-2.079","-2.639","0","0","-1.099","-5.389","-5.525","-6.801","-4.234","-4.533","-4.143","-4.533","-3.135","-3.434","-2.996","-3.045","-3.367","-3.045","-1.609","-3.332","-3.178","-2.079","-1.946","-1.386","-1.946","-1.099","-2.398","-2.303","-1.792","0","-0.693","0","-5.727","-5.124","-6.497","-4.394","-4.779","-4.382","-4.357","-3.829","-3.932","-3.85","-3.611","-3.434","-2.708","-2.708","-3.466","-3.296","-1.609","-2.197","-2.197","-2.303","-0.693","-2.773","-1.792","-2.197","-0.693","0","0","-5.303","-5.583","-6.759","-5.004","-4.86","-4.554","-4.357","-3.932","-3.932","-3.892","-3.892","-3.664","-3.367","-3.135","-3.135","-3.045","-2.197","-1.386","-1.386","-2.197","-1.946","-2.944","-2.485","-2.639","-1.099","-1.099","-1.099","-5.805","-5.613","-6.971","-5.112","-5.215","-4.836","-4.691","-3.526","-4.382","-3.951","-3.738","-3.85","-3.296","-3.135","-3.367","-2.639","-2.708","-2.079","-2.996","-1.946","-1.609","-2.639","-3.135","-2.708","-1.609","-1.099","-1.609","-6.082","-5.694","-6.914","-5.352","-5.088","-4.736","-4.585","-4.007","-4.143","-4.248","-3.738","-3.466","-3.584","-3.466","-3.807","-3.332","-2.079","-2.079","-2.197","-2.485","-1.792","-2.639","-2.565","-2.773","-1.386","-1.099","0","-5.886","-5.922","-7.152","-5.05","-5.037","-4.779","-4.407","-4.543","-4.234","-4.489","-3.932","-4.06","-3.434","-3.258","-3.584","-3.466","-2.565","-2.639","-2.079","-1.946","-1.099","-2.944","-2.833","-3.091","-1.386","-0.693","0","-6.114","-6.014","-7.298","-6.075","-5.823","-5.58","-5.088","-4.89","-4.745","-5.05","-4.111","-4.094","-3.97","-3.689","-3.664","-3.219","-2.398","-2.708","-2.398","-1.792","-1.609","-3.178","-2.996","-3.258","-1.609","0","-1.609","-6.778","-6.729","-8.091","-5.361","-5.328","-4.796","-4.771","-4.431","-4.585","-4.585","-4.174","-4.205","-3.807","-3.611","-3.401","-3.178","-2.565","-2.639","-2.485","-2.773","-2.079","-2.833","-3.367","-3.258","-1.386","0","-1.386","-6.373","-6.205","-7.446","-5.242","-5.46","-5.209","-5.069","-4.605","-4.477","-4.71","-4.466","-4.094","-4.043","-3.296","-3.951","-3.689","-3.135","-2.833","-3.091","-2.398","-1.946","-3.135","-3.555","-2.996","-1.609","-0.693","-1.386","-6.094","-6.242","-7.466","-5.572","-5.375","-5.075","-4.99","-4.605","-4.205","-4.394","-4.382","-3.951","-3.85","-3.296","-3.912","-3.584","-2.833","-2.833","-2.89","-2.639","-1.609","-3.258","-3.045","-3.091","-0.693","-1.099","-1.099","-6.261","-6.131","-7.219","-5.673","-5.347","-5.215","-5.187","-4.779","-4.654","-4.111","-4.19","-4.043","-3.989","-3.135","-3.638","-3.219","-2.708","-2.639","-3.401","-2.079","-1.792","-2.773","-2.89","-2.996","-1.099","-1.099","-1.099","-6.488","-6.412","-7.352"],"dim":[71,27],"rows":["security_and_services","fashion_childrens_clothes","cds_dvds_musicals","dvds_blu_ray","small_appliances_home_oven_and_coffee","furniture_bedroom","tablets_printing_image","fashion_male_clothing","costruction_tools_tools","cine_photo","fashion_sport","books_imported","music","furniture_mattress_and_upholstery","diapers_and_hygiene","fashio_female_clothing","arts_and_craftmanship","la_cuisine","flowers","home_comfort_2","party_supplies","books_general_interest","small_appliances","construction_tools_construction","luggage_accessories","consoles_games","home_construction","home_appliances","musical_instruments","fixed_telephony","computers","fashion_shoes","market_place","food","furniture_living_room","home_confort","audio","construction_tools_safety","agro_industry_and_commerce","signaling_and_security","art","fashion_underwear_beach","christmas_supplies","food_drink","costruction_tools_garden","drinks","construction_tools_lights","books_technical","kitchen_dining_laundry_garden_furniture","air_conditioning","home_appliances_2","industry_commerce_and_business","health_beauty","computers_accessories","sports_leisure","telephony","watches_gifts","bed_bath_table","furniture_decor","pet_shop","office_furniture","fashion_bags_accessories","stationery","electronics","baby","perfumery","housewares","toys","auto","cool_stuff","garden_tools"],"cols":["RS","PR","SC","BA","GO","ES","DF","PE","CE","MT","MS","PA","MA","AL","TO","SE","RO","AM","PB","PI","RN","AC","RR","AP","RJ","MG","SP"]},"image":"data:image/png;base64,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","theme":null,"options":{"xaxis_height":80,"yaxis_width":120,"xaxis_font_size":null,"yaxis_font_size":null,"brush_color":"#0000FF","show_grid":true,"anim_duration":500}},"evals":[],"jsHooks":[]}</script><!-br&gt;</p>
+<p><span style="font-size:24px">💡</span>
+除了用顏色表現矩陣裡面的數字，熱圖可以幫我們在矩陣的兩個方向分別做層級式集群分析，幫助我們看到資料裡面的結構。
+<br></p>
+<br><br><br>
+<hr>
+</div>
+</div>
+</div>
+
+    
+    
+
+    
+
+        <h4 class="page-header">Related</h4>
+
+         <div class="item">
+
+    
+    
+    
+
+    
+    
+      
+    
+
+    <h4><a href="/2019/04/24/%E8%B2%A1%E9%87%91%E6%96%87%E5%AD%97%E6%8E%A2%E5%8B%98%E5%B0%88%E9%A1%8C-r-tfidf-%E5%AF%A6%E4%BD%9C/">財金文字探勘專題-- R Tfidf 實作</a></h4>
+    <h5>April 24, 2019 - 4 minutes</h5>
+    <h5></h5>
+
+    
+    
+    <a href="/tags/r">
+        <kbd class="item-tag"> R </kbd>
+    </a>
+    
+
+</div>
+  <div class="item">
+
+    
+    
+    
+
+    
+    
+      
+    
+
+    <h4><a href="/2019/04/23/%E9%87%8F%E5%8C%96%E7%AD%96%E7%95%A5-%E4%B8%BB%E5%8A%9B%E5%90%B8%E8%B2%A8/">量化策略--主力吸貨</a></h4>
+    <h5>April 23, 2019 - 2 minutes</h5>
+    <h5></h5>
+
+    
+    
+    <a href="/tags/r">
+        <kbd class="item-tag"> R </kbd>
+    </a>
+    
+
+</div>
+  <div class="item">
+
+    
+    
+    
+
+    
+    
+      
+    
+
+    <h4><a href="/2019/04/23/%E8%B2%A1%E9%87%91%E6%96%87%E5%AD%97%E6%8E%A2%E5%8B%98%E5%B0%88%E9%A1%8C-%E6%96%87%E5%AD%97%E6%8E%A2%E5%8B%98%E7%B0%A1%E4%BB%8B/">財金文字探勘專題--文字探勘簡介</a></h4>
+    <h5>April 23, 2019 - 1 minutes</h5>
+    <h5></h5>
+
+    
+    
+    <a href="/tags/r">
+        <kbd class="item-tag"> R </kbd>
+    </a>
+    
+    <a href="/tags/text-mining">
+        <kbd class="item-tag"> Text Mining </kbd>
+    </a>
+    
+
+</div>
+ 
+
+    
+
+    
+
+</main>
+
+        <footer id = "bigfooter">
+            <div style = "padding:15px;">
+                <p>Powered by <a href="https://gohugo.io">Hugo</a>. Themed by <a href="https://github.com/nathancday/min_night">min_night</a>.
+                </p>
+                <a rel="license" href="https://creativecommons.org/licenses/by/4.0/"
+                title="Creative Commons Attribution 4.0 International license">
+                <i class="fab fa-creative-commons" aria-hidden="true"></i> Attribution 4.0 International license
+                </a>
+            </div>
+        </footer>
+        
+        <script async src="https://www.googletagmanager.com/gtag/js?id="></script>
+        <script>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments)};
+          gtag('js', new Date());
+          gtag('config', '');
+        </script>
+       
+    </body>
+
+</html>
+

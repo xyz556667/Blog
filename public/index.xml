@@ -48,6 +48,17 @@
     </item>
     
     <item>
+      <title>R語言課程 UNIT10B：期中專案(OLIST)資料探索</title>
+      <link>/2019/04/24/r%E8%AA%9E%E8%A8%80%E8%AA%B2%E7%A8%8B-unit10b%E6%9C%9F%E4%B8%AD%E5%B0%88%E6%A1%88olist%E8%B3%87%E6%96%99%E6%8E%A2%E7%B4%A2/</link>
+      <pubDate>Wed, 24 Apr 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/2019/04/24/r%E8%AA%9E%E8%A8%80%E8%AA%B2%E7%A8%8B-unit10b%E6%9C%9F%E4%B8%AD%E5%B0%88%E6%A1%88olist%E8%B3%87%E6%96%99%E6%8E%A2%E7%B4%A2/</guid>
+      <description>單元摘要： 期中專案(OLIST)資料探索pacman::p_load(dplyr, MASS, dendextend, vegan, randomcoloR, googleVis, d3heatmap)💡請注意資料是放在上星期的資料夾裡面
+load(&amp;quot;unit10/data/olist.RData&amp;quot;)load(&amp;quot;unit10/data/Z.RData&amp;quot;)
+【A】利用集群分析與尺度縮減的應用：產品(大項)分類A1. Pull product_category_name_english into PP = left_join(P, TPC) %&amp;gt;% rename(category = product_category_name_english)Joining, by = &amp;quot;product_category_name&amp;quot;A2. Merge category into II = left_join(I, P[,c(1:10)])Joining, by = &amp;quot;product_id&amp;quot;A3. Make a Category_Seller Binary Matrix: mxmx = xtabs(~ category + seller_id, I) &amp;gt; 0dim(mx)[1] 71 3033A4.</description>
+    </item>
+    
+    <item>
       <title>財金文字探勘專題-- R Tfidf 實作</title>
       <link>/2019/04/24/%E8%B2%A1%E9%87%91%E6%96%87%E5%AD%97%E6%8E%A2%E5%8B%98%E5%B0%88%E9%A1%8C-r-tfidf-%E5%AF%A6%E4%BD%9C/</link>
       <pubDate>Wed, 24 Apr 2019 00:00:00 +0000</pubDate>
